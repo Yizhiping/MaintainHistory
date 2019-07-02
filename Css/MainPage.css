@@ -1,0 +1,145 @@
+body, div, address, blockquote, iframe, ul, ol, dl, dt, dd, li, dl, h1, h2, h3, h4, h5, h6, p, pre, table, caption, th, td, form, legend, fieldset, input, button, select, textarea {margin:0; padding:0; font-weight: normal;font-style: normal;font-size: 100%; font-family: inherit;}
+ol, ul ,li{list-style: none;}
+img {border: 0;}
+html {    height: 100%;}
+body {
+    height: 100%;
+    margin: 0;
+    color:#000;
+    background:#FFF;
+    font: 20px/1.5 Arial, Helvetica, sans-serif;
+}
+
+/*******************單選和多選按鈕*******************/
+input[type='checkbox'],input[type=radio] {
+    margin-right: 5px;
+    margin-left: 15px;
+}
+
+/********************單選和多選按鈕結束*************/
+
+/*********************標籤**************************/
+label {
+    cursor: pointer;
+}
+/*********************標籤結束*********************/
+
+/**********************按鈕樣式********************/
+.button,input[type='button'],input[type='submit']
+{
+    cursor: pointer;
+    height: 30px;
+    text-align: center;
+    padding: 0.2em 1em 0.25em;
+    font:0.8em/100% FangSong,Arial;
+    border-radius: 0.2em;
+}
+
+.input,input[type='text'],input[type='password'],select
+{
+    height: 30px;
+    line-height: 30px;
+    padding: 0.1em 0.5em 0.1em;
+    border-radius: 0.2em;
+}
+/**********************按鈕樣式結束*******************/
+
+/**********************搜索欄樣式*********************/
+.divSearch {
+    margin: 5px 0 5px;
+    border-bottom: 1px solid #666;
+    padding: 0.0em 0 0.2em;
+}
+/**********************搜索欄樣式結束*****************/
+/**********************搜索結果樣式*******************/
+.divResult
+{
+
+}
+
+.divResult table {
+    border: 1px solid #666;
+    border-collapse: collapse;
+}
+
+.divResult table tr td {
+    border: 1px solid #aaa;
+    padding:0.1em 0.5em 0.1em;
+    text-align: center;
+}
+
+.divSearch table tr:nth-child(2n){
+    background-color: #222;
+}
+
+.divResult table tr:first-child {
+    background-color: #333;
+    color: #fff;
+    font-weight: bolder;
+}
+
+.divResult table tr:nth-child(2n)
+{
+    background-color: #efffef;
+}
+
+.divResult table tr:hover {
+    background-color: #88ffaa;
+    color: #000;
+}
+/************************搜索結果樣式結束***********************/
+
+/************************主面板样式*****************************/
+#container {
+    width:100%;
+    height: 100%;
+    margin:0px auto;/*主面板DIV居中*/
+    border: 1px solid #666;
+    font-family: FangSong;
+
+    position: absolute;
+}
+/*顶部面板样式*/
+#header {
+    width:100%;
+    height:50px;
+    /*border:1px #F00 solid;*/
+    background-color: #00C1B3;
+    text-align: center;
+    line-height: 50px;
+    font-family: KaiTi;
+    font-size: 40px;
+
+}
+/*中间部分面板样式*/
+#main {
+    width:100%;
+
+    /*border: 1px solid #666;*/
+}
+/*底部面板样式*/
+#footer {
+    width:100%;
+    height:20px;
+    /*border:1px #F00 solid;*/
+    position: absolute;
+    bottom: 5px;
+    text-align: right;
+    font-size: 14px;
+
+}
+
+#mainMenu {
+    height:32px;
+    background-color: coral;
+
+    position: absolute;
+    width: 100%;
+    z-index: 999;
+}
+
+#mainContent {
+    position: absolute;
+    margin-top: 32px;
+}
+/*****************主面板樣式結束*******************/

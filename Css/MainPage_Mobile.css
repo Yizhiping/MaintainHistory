@@ -1,0 +1,136 @@
+body, div, address, blockquote, iframe, ul, ol, dl, dt, dd, li, dl, h1, h2, h3, h4, h5, h6, p, pre, table, caption, th, td, form, legend, fieldset, input, button, select, textarea
+{
+    margin:0;
+    padding:0;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 100%;
+    font-family: inherit;
+}
+ol, ul ,li{list-style: none;}
+img {border: 0;}
+body {
+    color:#000;
+    background:#FFF;
+    /*text-align: center; */
+    font-size: 2em;
+}
+
+/*******************單選和多選按鈕*******************/
+input[type='checkbox'],input[type='radio'] {
+    margin-right: 5px;
+    margin-left: 15px;
+
+}
+/********************單選和多選按鈕結束*************/
+
+/*********************標籤**************************/
+label {
+    cursor: pointer;
+}
+/*********************標籤結束*********************/
+
+/**********************按鈕樣式********************/
+.button,input[type='button'],input[type='submit']
+{
+    cursor: pointer;
+    height: 1.5em;
+    text-align: center;
+    padding: 0.2em 1em 0.25em;
+    font:1.5em/100% FangSong,Arial;
+    border-radius: 0.2em;
+}
+
+.input,input[type='text'],input[type='password'],select
+{
+    height: 1.5em;
+    line-height: 30px;
+    padding: 0.2em 1em 0.25em;
+    font-size:1.5em;
+    border-radius: 0.2em;
+    background-color: #FFFFFF;
+}
+/**********************按鈕樣式結束*******************/
+
+/**********************搜索欄樣式*********************/
+.divSearch {
+    margin: 5px 0 5px;
+    border-bottom: 1px solid #666;
+    padding: 0.0em 0 0.2em;
+}
+/**********************搜索欄樣式結束*****************/
+/**********************搜索結果樣式*******************/
+.divResult
+{
+
+}
+
+.divResult table {
+    border: 1px solid #666;
+    border-collapse: collapse;
+}
+
+.divResult table tr td {
+    border: 1px solid #aaa;
+    padding:0.1em 0.5em 0.1em;
+    text-align: center;
+}
+
+.divSearch table tr:nth-child(2n){
+    background-color: #222;
+}
+
+.divResult table tr:first-child {
+    background-color: #333;
+    color: #fff;
+    font-weight: bolder;
+}
+
+.divResult table tr:nth-child(2n)
+{
+    background-color: #efffef;
+}
+
+.divResult table tr:hover {
+    background-color: #88ffaa;
+    color: #000;
+}
+ /************************搜索結果樣式結束***********************/
+
+/************************主面板样式*****************************/
+#container {
+    width:100%;
+    height: 100%;
+    margin:0px auto;/*主面板DIV居中*/
+    font-family: FangSong;
+}
+/*顶部面板样式*/
+#header {
+    width:100%;
+    height:1.5em;
+    background-color: #00C1B3;
+    text-align: center;
+    line-height: 1.5em;
+    font-family: KaiTi;
+    font-size: 3em;
+}
+/*中间部分面板样式*/
+#main {
+    width:100%;
+    /*     height:400px; */
+}
+/*底部面板样式*/
+#footer {
+    width:100%;
+    height:1em;
+    position: absolute;
+    bottom: 10px;
+    text-align: right;
+    font-size: 1em;
+}
+
+#mainMenu {
+    height:3em;
+    background-color: coral;
+}
+/*****************主面板樣式結束*******************/
