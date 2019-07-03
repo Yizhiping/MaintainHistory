@@ -14,7 +14,7 @@ function __createSelectItem($itemList, $default)
 
 ?>
 <style>
-    #divMaintainAdd select,#divMaintainAdd input[type='text']{
+    #divMaintainAdd select,#divMaintainAdd input[type='text'],#divMaintainAdd input[type='date']{
         width: 100%;
     }
 
@@ -43,12 +43,12 @@ function __createSelectItem($itemList, $default)
     <tr>
         <td class="maintainTitle">日期:</td>
         <td>
-            <select></select>
+            <input type="date" id="date" name="date" value="<?php echo date("Y-m-d")?>">
         </td>
-        <td class="maintainTitle">時間:</td>
-        <td>
-            <select></select>
-        </td>
+<!--        <td class="maintainTitle">時間:</td>-->
+<!--        <td>-->
+<!--            <input type="time" id="time" name="time" value="--><?php //echo date("H:M:S")?><!--">-->
+<!--        </td>-->
         <td class="maintainTitle">班別:</td>
         <td>
             <select>
@@ -56,17 +56,17 @@ function __createSelectItem($itemList, $default)
                 <option value="Night">夜班</option>
             </select>
         </td>
-        <td colspan="3"></td>
+        <td colspan="5"></td>
     </tr>
     <tr>
         <td class="maintainTitle">線體:</td>
-        <td><input type="text" id="line" name="line" value="<?php echo $line ?>">
+        <td title="發生異常時的所在綫體"><input type="text" id="line" name="line" value="<?php echo $line ?>">
             <select id="selLine" name="selLine">
                 <?php __createSelectItem($conn->getLine("select line from linelist order by line"), $line)   ?>
             </select>
         </td>
          <td class="maintainTitle">機種:</td>
-        <td>
+        <td title="發生異常的機種">
             <input type="text" id="model" name="model" value="<?php echo $model ?>">
             <select id="selModel" name="selModel">
                 <?php __createSelectItem($conn->getLine("select name from modellist order by name"), $model)   ?>
