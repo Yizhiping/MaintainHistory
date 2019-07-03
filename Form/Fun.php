@@ -6,6 +6,8 @@
  * Time: 17:06
  */
 
+if(!$user->authByRole('管理員')) goto pageEnd;
+
 //創建功能
 $funDesc = __get('iptFunDesc');
 if(!empty(__get('btnCreateFun')))
@@ -60,3 +62,5 @@ foreach ($conn->getAllRow("select code,name from fun order by Name") as $f)
     </div>
 </div>
 </form>
+
+<?php pageEnd:?>

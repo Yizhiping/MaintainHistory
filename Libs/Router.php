@@ -5,7 +5,7 @@
  * Date: 2019/6/10
  * Time: 9:52
  */
-$loadPage = null;
+
 switch ($act)
 {
     case "userLogout":
@@ -40,5 +40,3 @@ switch ($act)
         }
         break;
 }
-
-pageEnd:

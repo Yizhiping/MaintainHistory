@@ -5,6 +5,7 @@
  * Date: 2019/6/11
  * Time: 10:42
  */
+if(!$user->authByRole('管理員')) goto pageEnd;
 
 $rid = __get('role');
 $rDesc = __get("iptRoleDesc");
@@ -117,3 +118,5 @@ foreach ($roleList as $r)
      </div>
 
  </form>
+
+<?php pageEnd: ?>

@@ -16,7 +16,7 @@ if(!empty(__get('btnUserLogin')))
     } else {
         if($user->login($uid, $pwd))
         {
-            header("Location:" . $homeUrl);
+           header("Location:" . $homeUrl);
         } else {
             __showMsg("账号或密码错误, 登录失败.");
         }
@@ -73,7 +73,7 @@ $(document).ready(function(e) {
                     <td><input id="password" name="password" type="password" value="<?php echo $pwd ?>"/></td>
                 </tr>
                 <tr>
-                    <td></td>
+                    <td><a href="?act=userAdd">註冊</a></td>
                     <td><input type="submit" name="btnUserLogin" id="btnUserLogin" value="登入系统"></td>
                 </tr>
             </table>

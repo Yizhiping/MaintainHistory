@@ -5,5 +5,4 @@
  * Date: 2019/7/2
  * Time: 15:03
  */
-
-echo password_hash('#*c123456',PASSWORD_DEFAULT);
+echo preg_match("/^[L,S][0-9,A][0-9]{7}$/", "LA1300779");

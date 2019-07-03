@@ -16,6 +16,7 @@ class MysqlConn
     private $conn;
     public  $lastSql;   //最後執行的sql
     private $err;
+    private $errNo;     //錯誤代碼
 
     function __construct($host, $uid, $pwd, $db)
     {
@@ -116,13 +117,27 @@ class MysqlConn
             return true;
         } else {
             $this->err = $this->conn->error;
+            $this->errNo = $this->conn->errno;
             return false;
         }
     }
 
+    /**
+     * 獲取錯誤
+     * @return mixed
+     */
     public function getErr()
     {
         return $this->err;
+    }
+
+    /**
+     * 獲取錯誤代碼
+     * @return mixed
+     */
+    public function getErrNo()
+    {
+        return $this->errNo;
     }
 }
 

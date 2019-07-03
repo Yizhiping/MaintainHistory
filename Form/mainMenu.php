@@ -53,8 +53,9 @@
         <ul id="menu">
             <li>維護記錄
                 <ul>
-                    <li><a href="?act=maintain">添加</a></li>
-                    <li><a>更新</a></li>
+                    <li><a href="?act=maintain/add">添加</a></li>
+                    <li><a href="?act=maintain/update">更新</a></li>
+                    <li><a href="?act=maintain/search">查找</a></li>
                 </ul>
             </li>
             <li>查詢
@@ -87,7 +88,7 @@
     </div>
     <div class="menuDiv">
         <ul id="userInfo">
-            <li><a href="?act=userDetail">用戶信息</a></li>
+            <li><a href="?act=userDetail"><?php echo $user->name ?></a></li>
             <li><a href="?act=userLogout">登出</a></li>
         </ul>
     </div>

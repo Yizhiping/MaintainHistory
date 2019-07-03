@@ -25,9 +25,20 @@ $db_name = "MaintainHistory";
 
 /**********************一些参数**************************/
 $homeUrl = "Index.php";     //默认页面
-$opid = 'S09264888';        //系統調用SFIS用到的工號
-$device = '111111';         //系統調用SFIS用到的撥號
+//$opid = 'S09264888';        //系統調用SFIS用到的工號
+//$device = '111111';         //系統調用SFIS用到的撥號
 
+$actList = array(
+    'maintain'=>'維護記錄',
+    'Users'=>'用戶管理',
+    'Roles' => '角色管理',
+    'Fun'=>'功能管理'
+                );
+$methodList = array(
+    'add'=>'添加',
+    'update'=>'更新',
+    'search'=>'查找'
+);
 
 
 $conn = new MysqlConn($db_host, $db_uid, $db_pwd, $db_name);

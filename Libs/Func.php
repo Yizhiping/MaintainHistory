@@ -29,6 +29,15 @@ function __showMsg($msg)
 }
 
 /**
+ * 使用js跳轉到指定地址
+ * @param $url
+ */
+function __goUrl($url)
+{
+    printf("<script type=text/javascript>window.location.href=\"%s\"</script>",$url);
+}
+
+/**
  * 獲取遠端IP
  * @return string
  */

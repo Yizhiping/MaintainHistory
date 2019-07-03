@@ -139,7 +139,8 @@ label {
 }
 
 #mainContent {
-    position: absolute;
+    /*position: absolute;*/
     margin-top: 32px;
+    overflow-y: scroll;
 }
 /*****************主面板樣式結束*******************/

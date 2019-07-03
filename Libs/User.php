@@ -5,7 +5,7 @@
  * Date: 2019/6/6
  * Time: 14:35
  */
-//require_once "MysqlConn.php";
+
 class User
 {
     public $uid;                //账号名称
@@ -15,6 +15,8 @@ class User
     public $lastLogin;          //最后登录时间
     public $loginAddr;          //最后登录地址
     public $loginTimes;         //登录次数
+    public $role;               //用戶角色
+    public $fun;                //用戶權限
     public $uconn;
     public $isLogined = false;
 
@@ -43,6 +45,8 @@ class User
                 $this->lastLogin = $_SESSION['lastLogin'];
                 $this->loginAddr = $_SESSION['loginAddr'];
                 $this->loginTimes= $_SESSION['loginTimes'];
+                $this->role = $_SESSION['role'];
+                $this->fun  = $_SESSION['fun'];
             }
         }
     }
@@ -56,24 +60,25 @@ class User
     function login($uid, $pwd)
     {
         $userInfo = $this->uconn->getFristRow("select uid,pwd,name,mail,lastLogin,loginTimes,loginAddr,enable from users where Uid='{$uid}'");
+        var_dump($userInfo);
         if($userInfo)
         {
             if(password_verify($pwd, $userInfo[1]))     //verify password
             {
                 //将用户信息存入session, 更新類成員信息
-                $this->loginAddr = __getIP();
+                $this->loginAddr = $_SESSION['loginAddr'] =  __getIP();
                 $this->isLogined = $_SESSION['isLogined'] = true;          //isLogined
                 $this->uid =    $_SESSION['uid'] = $userInfo[0];            //uid
                 $this->name =   $_SESSION['name'] = $userInfo[2];           //name
                 $this->mail =   $_SESSION['mail'] = $userInfo[3];           //mail
                 $this->lastLogin = $_SESSION['lastLogin'] = $userInfo[4];   //lastLogin
                 $this->loginTimes = $_SESSION['loginTimes'] = $userInfo[5]; //LoginTimes
-                $this->loginAddr = $_SESSION['loginAddr'] = $userInfo[6];   //loginAddr
                 $this->enable = $_SESSION['enable'] = $userInfo[7];         //enable
+                $this->role = $_SESSION['role'] = $this->uconn->getLine("select name from role where code in(select rid from urid where uid='{$uid}' )");
+                $this->fun  = $_SESSION['fun'] = $this->uconn->getLine("select name from fun  where code in(select fid from rfid where rid in (select rid from urid where uid='{$uid}'))");
 
                 //更新登录信息
-                $this->uconn->query("update users set loginAddr='{$this->loginAddr}', LastLoginTime=now(), LoginTimes=LoginTimes+1 where Uid='{$this->uid}'");
-                echo $this->uconn->lastSql;
+                $this->uconn->query("update users set loginAddr='{$this->loginAddr}', lastLogin=now(), LoginTimes=LoginTimes+1 where Uid='{$this->uid}'");
                 return true;
             } else {
                 return false;
@@ -127,9 +132,15 @@ class User
      */
     public function changePassword($uid, $oldPwd, $newPwd)
     {
-        if(password_verify($oldPwd,$this->uconn->getItemByItemName("select password from users where Uid='{$uid}'")))
+        if(password_verify($oldPwd, $this->uconn->getItemByItemName("select pwd from users where uid='{$uid}'")))
         {
-            return $this->uconn->query("update users set PassWord='{$newPwd}'");
+            $newPwd = password_hash($newPwd, PASSWORD_DEFAULT);
+            if($this->uconn->query("update users set pwd='{$newPwd}'"))
+            {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -142,6 +153,7 @@ class User
      */
     public function userAdd($userInfo)
     {
+        $userInfo['pwd'] = password_hash($userInfo['pwd'],PASSWORD_DEFAULT);
         $sql = "insert into users (uid, name, pwd, mail) value (
                 '{$userInfo['uid']}',
                 '{$userInfo['name']}',
