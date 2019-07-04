@@ -13,7 +13,7 @@ class MysqlConn
     private $db_userid; //= "root";
     private $db_password;//  = "root";
     private $db_dbname; // = "WareHouseManagement";
-    private $conn;
+    public $conn;
     public  $lastSql;   //最後執行的sql
     private $err;
     private $errNo;     //錯誤代碼
@@ -46,10 +46,15 @@ class MysqlConn
     function getAllRow($sql)
     {
         $this->lastSql = $sql;
-        $row = $this->conn->query($sql);
-        if($row)
+        $res = $this->conn->query($sql);
+        if($res)
         {
-            return $row->fetch_all();
+            $tmpArr = array();
+            while ($row = $res->fetch_assoc())
+            {
+                array_push($tmpArr,$row);
+            }
+            return $tmpArr;
         } else {
             return false;
         }
@@ -64,7 +69,13 @@ class MysqlConn
         $res = $this->getAllRow($sql);
         if($res)
         {
-            return $res[0];
+            $result = null;
+            foreach ($res as $r)
+            {
+                $result = $r;
+                break;
+            }
+            return $result;
         } else {
             return false;
         }
@@ -82,7 +93,12 @@ class MysqlConn
             $arr = array();
             foreach ($res as $r)
             {
-                array_push($arr,$r[0]);
+                foreach ($r as $key=>$val)
+                {
+                    array_push($arr,$val);
+                    break;
+                }
+
             }
             return $arr;
         } else {

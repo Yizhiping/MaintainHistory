@@ -25,6 +25,8 @@ function __get($v)
  */
 function __showMsg($msg)
 {
+//    str_replace('\(', '&#40;', $msg);
+//    str_replace('\)', '&#41;', $msg);
     printf("<script type=text/javascript>alert(\"%s\");</script>",$msg);
 }
 
@@ -194,4 +196,16 @@ function __createLink($id, $name=null, $class=null, $link='#', $desc)
     $html = null;
     $html .= "<a id='{$id}' name='{$name}' class='{$class}' href='{$link}' >{$desc}</a>";
     echo $html;
+}
+
+/**
+ * 創建li清單
+ * @param $itemList
+ */
+function __createSelectItem($itemList)
+{
+    foreach ($itemList as $value)
+    {
+        echo "<li class='listOption'>{$value}</li>";
+    }
 }

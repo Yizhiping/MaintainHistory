@@ -144,3 +144,25 @@ label {
     overflow-y: scroll;
 }
 /*****************主面板樣式結束*******************/
+
+/*****************下拉清單樣式開始*****************/
+.itemList {
+    display: none;
+    position: absolute;
+    width: 150px;
+    background-color: #fff;
+    height: 300px;
+    overflow-y: scroll;
+}
+.itemList li {
+    border: 1px solid #666;
+    text-align: center;
+    font-size: 0.8em;
+}
+.itemList li:hover{
+    background-color: #666;
+    color: #fff;
+    cursor: pointer;
+}
+
+/*****************下拉清單樣式結束*****************/

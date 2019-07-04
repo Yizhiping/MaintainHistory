@@ -5,4 +5,15 @@
  * Date: 2019/7/2
  * Time: 15:03
  */
-echo preg_match("/^[L,S][0-9,A][0-9]{7}$/", "LA1300779");
+//include("Libs/Func.php");
+//include("Libs/Config.php");
+//include("Libs/MaintainHistory.php");
+//
+//$mianTain = new MaintainHistory();
+//
+//$res = $mianTain->search(array('line','errCode'), array('line'=>'3J'));
+//
+
+$arr = array('a'=>1, 'b'=>2);
+
+echo $arr[0];

@@ -11,8 +11,8 @@ class MaintainHistory
     public $mconn;              //數據庫連接引用
     public $sampleHistory = array(
         'id'=>null,             //序號
-        'date'=>null,           //日期
         'time'=>null,           //時間
+        'date'=>null,           //日期
         'shift'=>null,          //班別
         'line'=>null,           //線體
         'model'=>null,          //機種
@@ -24,6 +24,7 @@ class MaintainHistory
         'causeAnalysis'=>null,  //原因分析
         'action'=>null,         //對策
         'result'=>null,         //結果
+        'state'=>0,              //狀態
         'owner'=>null           //處理人
     );
     public function __construct()
@@ -39,8 +40,8 @@ class MaintainHistory
      */
     public function add($maintainHistory)
     {
-        $maintainHistory = array_slice($maintainHistory,3);
-        $sql = "insert into maintainhistory (shift, line, model, station, device, errCode, errDesc, rootCause, CauseAnalysis, 'Action', result, owner)
+        $maintainHistory = array_slice($maintainHistory,2);
+        $sql = "insert into maintainhistory (date,shift, line, model, station, device, errCode, errDesc, rootCause, CauseAnalysis, zAction, result, state,owner)
               value ('" . implode("','",$maintainHistory) ."')";
         return $this->mconn->query($sql);
     }
@@ -63,6 +64,35 @@ class MaintainHistory
         if($result != false) array_push($updateItem, "result='{$result}");
         $sql = "update maintainhistory set " . implode(',',$updateItem) . " where id={$id}";
         return $this->mconn->query($sql);
+    }
+
+    public function search($fields=false, $filters=false, $sql=null)
+    {
+        $field = null;
+        $filter = null;
+        if($fields==false)
+        {
+            $field = "*";
+        } else if(is_array($fields))
+        {
+            $field = implode(',',$fields);
+        }
+
+        if(is_array($filters))
+        {
+            $tmpArr = array();
+            foreach ($filters as $key=>$val)
+            {
+                array_push($tmpArr,"{$key}='{$val}'");
+            }
+            if(!empty($tmpArr)) $filter = "and " . implode(' and ', $tmpArr);
+
+        }
+
+        $sqlStr = "select {$field} from maintainhistory where 1=1 {$filter}";
+        $sqlStr .= $sql == null ? null: " and " . $sql;
+
+        return $this->mconn->getAllRow($sqlStr);
     }
 
     /**

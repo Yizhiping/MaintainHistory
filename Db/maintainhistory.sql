@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.5.53)
-# Date: 2019-07-03 20:03:01
+# Date: 2019-07-04 17:36:25
 # Generator: MySQL-Front 5.3  (Build 4.234)
 
 /*!40101 SET NAMES utf8 */;
@@ -96,17 +96,19 @@ CREATE TABLE `maintainhistory` (
   `errDesc` varchar(255) NOT NULL DEFAULT '' COMMENT '異常現象描述',
   `rootCause` varchar(255) NOT NULL DEFAULT '' COMMENT '問題點',
   `CauseAnalysis` text NOT NULL COMMENT '原因分析',
-  `Action` text NOT NULL COMMENT '對策',
+  `zAction` text NOT NULL COMMENT '對策',
   `result` varchar(255) NOT NULL DEFAULT '' COMMENT '處理結果',
+  `State` tinyint(1) NOT NULL DEFAULT '0' COMMENT '狀態',
   `owner` varchar(255) NOT NULL DEFAULT '' COMMENT '處理人',
   `ModifyTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '記錄更新時間',
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='維護記錄';
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COMMENT='維護記錄';
 
 #
 # Data for table "maintainhistory"
 #
 
+INSERT INTO `maintainhistory` VALUES (38,'2019-07-04','00:00:00','Day','3J','T25','FWDL','321','BDFA03','3213','321','3213','3213','3213',1,'S09264888','2019-07-04 14:45:53');
 
 #
 # Structure for table "modellist"
@@ -221,4 +223,4 @@ CREATE TABLE `users` (
 # Data for table "users"
 #
 
-INSERT INTO `users` VALUES (1,'admin','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','Administrator','Ping_yi','2019-07-03 17:46:00',22,'127.0.0.1',b'1'),(2,'S09264888','$2y$10$LaQIHs9FGQCsuJ5qZcyoa.2Fv4DXpS0U0DaRo2A9M7rMy/RMmElR2','易志平','ping_yi@pegatroncorp.com','2019-07-03 17:45:45',17,'127.0.0.1',b'1'),(3,'jsy','$2y$10$lsMn./QTasTExAHPQ9DQBO/2QCYZuXnb..idtt0y4nQ8FwbS0XNhW','技术员','','2019-07-03 13:41:25',1,'127.0.0.1',b'1'),(4,'zz','$2y$10$Zu1k4hCpVAkN7e4I.LqlguD5ld9k/bMFsGUo3DAA92JNCWIrFZBN2','组长','','2019-07-03 13:44:06',1,'127.0.0.1',b'1'),(5,'kj','$2y$10$IUpmpxsDpqDPix.yJpIM2uvCBBYU5JHHGl9U2XjWm5lYsT6pgcHt2','课级','','2019-07-03 13:43:52',1,'127.0.0.1',b'1'),(6,'bj','$2y$10$P.y2RBYb3enpVhzI9XEfzOVttypSGXXk6LZf9MWXIxIQ9XqQmyr5q','部级','','2019-07-03 13:43:59',1,'127.0.0.1',b'1'),(23,'S09264889','$2y$10$28E0O3xevojptKMI1RroZOoaEGw/a2mYwHv9P4Yy9LJO8JOEIE00a','易志平','','2019-07-03 14:59:30',1,'127.0.0.1',b'1');
+INSERT INTO `users` VALUES (1,'admin','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','Administrator','Ping_yi','2019-07-03 17:46:00',22,'127.0.0.1',b'1'),(2,'S09264888','$2y$10$LaQIHs9FGQCsuJ5qZcyoa.2Fv4DXpS0U0DaRo2A9M7rMy/RMmElR2','易志平','ping_yi@pegatroncorp.com','2019-07-04 14:14:39',18,'127.0.0.1',b'1'),(3,'jsy','$2y$10$lsMn./QTasTExAHPQ9DQBO/2QCYZuXnb..idtt0y4nQ8FwbS0XNhW','技术员','','2019-07-03 13:41:25',1,'127.0.0.1',b'1'),(4,'zz','$2y$10$Zu1k4hCpVAkN7e4I.LqlguD5ld9k/bMFsGUo3DAA92JNCWIrFZBN2','组长','','2019-07-03 13:44:06',1,'127.0.0.1',b'1'),(5,'kj','$2y$10$IUpmpxsDpqDPix.yJpIM2uvCBBYU5JHHGl9U2XjWm5lYsT6pgcHt2','课级','','2019-07-03 13:43:52',1,'127.0.0.1',b'1'),(6,'bj','$2y$10$P.y2RBYb3enpVhzI9XEfzOVttypSGXXk6LZf9MWXIxIQ9XqQmyr5q','部级','','2019-07-03 13:43:59',1,'127.0.0.1',b'1'),(23,'S09264889','$2y$10$28E0O3xevojptKMI1RroZOoaEGw/a2mYwHv9P4Yy9LJO8JOEIE00a','易志平','','2019-07-03 14:59:30',1,'127.0.0.1',b'1');

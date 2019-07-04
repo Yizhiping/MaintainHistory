@@ -55,7 +55,7 @@
                 <ul>
                     <li><a href="?act=maintain/add">添加</a></li>
                     <li><a href="?act=maintain/update">更新</a></li>
-                    <li><a href="?act=maintain/search">查找</a></li>
+                    <li><a href="?act=maintain/search">個人專區</a></li>
                 </ul>
             </li>
             <li>查詢
