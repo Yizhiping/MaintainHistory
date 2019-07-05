@@ -14,7 +14,9 @@ $modelList = $conn->getLine("select name from modellist order by name");
 
 <style>
 
+    #tabCount{ table-layout:fixed;}
 
+    #tabCount td{ word-break:break-word;}
     .selInput {
         width: 150px;
     }

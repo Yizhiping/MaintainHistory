@@ -131,14 +131,14 @@ switch ($method)
         $stopDate = __get('stopDate');
         $filter = array();
         $sqlSub = null;
-        $searchResult = null;
+        $allCount  = array();
 
         if((diffBetweenTwoDays($startDate,$stopDate) !== false) && (diffBetweenTwoDays($startDate,$stopDate) <= 91)) {
             $tmpArr = array();
 
             foreach (array('line','station','errCode','model') as $key)
             {
-                if($$key != 'All') array_push($tmpArr,"{$key}='{$$key}'");
+                if($$key != 'All' && !empty($$key)) array_push($tmpArr,"{$key}='{$$key}'");
             }
 
             //處理篩選條件
@@ -149,15 +149,14 @@ switch ($method)
             $searchStationList = $conn->getLine("select station from maintainhistory where {$sqlSub} date between '{$startDate}' and '{$stopDate}' group by station order by station");
 
 
-            $allCount  = array();
-            foreach ($searchLineList as $searchLine)
-            {
-                $lineCount = array();
-                foreach ($searchStationList as $searchStation)
-                {
-                    $lineCount += array($searchStation=>$conn->getItemByItemName("select count(id) from maintainhistory where line='{$searchLine}' and station='{$searchStation}' and date between '{$startDate}' and '{$stopDate}'"));
+            if(!empty($searchLineList) && !empty($searchStationList)) {
+                foreach ($searchLineList as $searchLine) {
+                    $lineCount = array();
+                    foreach ($searchStationList as $searchStation) {
+                        $lineCount += array($searchStation => $conn->getItemByItemName("select count(id) from maintainhistory where line='{$searchLine}' and station='{$searchStation}' and date between '{$startDate}' and '{$stopDate}'"));
+                    }
+                    $allCount += array($searchLine => $lineCount);
                 }
-                $allCount += array($searchLine=>$lineCount);
             }
         } else {
             __showMsg("搜索的日期錯誤, 開始日期必須小雨結束日期, 且最多搜索的天數不大於30天.");
