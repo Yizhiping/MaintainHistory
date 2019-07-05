@@ -47,39 +47,42 @@ if(!empty(__get('btnUpdateRoleInfo')))
 {
     //刪除所有角色權限
     $user->delByRoleFromRFID($rid);
-    foreach ($funList as $f)
+    foreach ($funList as $fun)
     {
-        if(!empty(__get($f[0])))
+        if(!empty(__get($fun['code'])))
         {
-            $user->addByRoleToRFID($rid, $f[0]);
+            $user->addByRoleToRFID($rid, $fun['code']);
         }
     }
     __showMsg("角色權限更新成功.");
 }
 
 //獲取當前角色所有權限
-$rfids = $conn->getLine("select fid from rfid where rid='{$rid}'");
+@$rfids = $conn->getLine("select fid from rfid where rid='{$rid}'");
+
+
 if(!is_array($rfids)) $rfids = array();     //如有沒有直接賦值空數組
+
 //以checkbox呈現角色權限
 $checkBoxStr = "";
-foreach ($funList as $f)
+foreach ($funList as $fun)
 {
-    if(in_array($f[0],$rfids)) {
-        $checkBoxStr .= "<div><label for='{$f[0]}'>{$f[1]}</label><input type='checkbox' name='{$f[0]}' id='{$f[0]}' value='{$f[0]}' checked='checked'/></div>";
+    if(in_array($fun['code'],$rfids)) {
+        $checkBoxStr .= "<div><label for='{$fun['code']}'>{$fun['name']}</label><input type='checkbox' name='{$fun['code']}' id='{$fun['code']}' value='{$fun['code']}' checked='checked'/></div>";
     } else {
-        $checkBoxStr .= "<div><label for='{$f[0]}'>{$f[1]}</label><input type='checkbox' name='{$f[0]}' id='{$f[0]}' value='{$f[0]}'/></div>";
+        $checkBoxStr .= "<div><label for='{$fun['code']}'>{$fun['name']}</label><input type='checkbox' name='{$fun['code']}' id='{$fun['code']}' value='{$fun['code']}'/></div>";
     }
 }
 
 //生成角色下拉清單
 $roleListStr = "";
-foreach ($roleList as $r)
+foreach ($roleList as $role)
 {
-    if($rid == $r[1])
+    if($rid == $role['code'])
     {
-        $roleListStr .= "<option value='{$r[1]}' selected='selected'>{$r[0]}</option>";
+        $roleListStr .= "<option value='{$role['code']}' selected='selected'>{$role['name']}</option>";
     } else {
-        $roleListStr .= "<option value='{$r[1]}'>{$r[0]}</option>";
+        $roleListStr .= "<option value='{$role['code']}'>{$role['name']}</option>";
     }
 }
 

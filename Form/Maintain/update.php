@@ -6,4 +6,72 @@
  * Time: 16:52
  */
 
-echo "這裡是更新";
+?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //部分欄位需要禁用
+        $('#date').attr('disabled',true);
+        $('#shift').attr('disabled',true);
+        $('#line').attr('disabled',true);
+        $('#model').attr('disabled',true);
+        $('#station').attr('disabled',true);
+        $('#device').attr('disabled',true);
+        $('#errCode').attr('disabled',true);
+        $('#owner').attr('disabled',true);
+        $('#errClass').attr('disabled',true);
+
+        //狀態為結案, 全部禁用.
+        if($('#state').val()=='1') {
+            $('#errDesc').attr('disabled', true);
+            $('#rootCause').attr('disabled', true);
+            $('#causeAnalysis').attr('disabled', true);
+            $('#action').attr('disabled', true);
+            $('#result').attr('disabled', true);
+            $('#state').attr('disabled', true);
+            $('#btnMaintainUpdate').attr('disabled', true);
+        }
+
+        $('#formMaintainAdd').submit(function () {
+            if($('#errDesc').val() == "")
+            {
+                $('#errDesc').focus();
+                alert("現象描述不能為空.");
+                return false;
+            }
+            if($('#rootCause').val() == "")
+            {
+                $('#rootCause').focus();
+                alert("異常原因不能為空.");
+                return false;
+            }
+            if($('#causeAnalysis').val() == "")
+            {
+                $('#causeAnalysis').focus();
+                alert("原因分析不能為空.");
+                return false;
+            }
+            if($('#action').val() == "")
+            {
+                $('#action').focus();
+                alert("對策不能為空.");
+                return false;
+            }
+
+            if($('#result').val() == "")
+            {
+                $('#result').focus();
+                alert("結果不能為空.");
+                return false;
+            }
+        });
+    });
+
+</script>
+<div id="divMaintainAdd" style="margin-top: 5px;">
+    <form method="post" action="?act=maintain/update/<?php echo $id ?>" id="formMaintainUpdate">
+        <div style="background-color: #00C1B3"><input type="submit" value="更新記錄" name="btnMaintainUpdate" id="btnMaintainUpdate"></div>
+        <?php
+        include("Form/Maintain/Form.php");
+        ?>
+    </form>
+</div>

@@ -209,3 +209,34 @@ function __createSelectItem($itemList)
         echo "<li class='listOption'>{$value}</li>";
     }
 }
+
+/**
+ * 截取中文字符串
+ * @param $str 要操作的字符串
+ * @param $from 開始位置
+ * @param $len  長度
+ * @return null|string|string[]
+ */
+function subStr_cut($str,$from,$len)
+{
+    return preg_replace('#^(?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'.$from.'}'.
+        '((?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'.$len.'}).*#s',
+        '$1',$str);
+}
+
+/**
+ * 計算兩個日期的天數, 如果day1 小于 day2 則返回 false
+ * @param $day1
+ * @param $day2
+ * @return bool|float|int
+ */
+function diffBetweenTwoDays ($day1, $day2)
+{
+    $second1 = strtotime($day1);
+    $second2 = strtotime($day2);
+    if ($second2 < $second1) {
+        return false;
+    } else {
+        return ($second2 - $second1) / 86400;
+    }
+}

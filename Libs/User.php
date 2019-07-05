@@ -60,20 +60,19 @@ class User
     function login($uid, $pwd)
     {
         $userInfo = $this->uconn->getFristRow("select uid,pwd,name,mail,lastLogin,loginTimes,loginAddr,enable from users where Uid='{$uid}'");
-        var_dump($userInfo);
         if($userInfo)
         {
-            if(password_verify($pwd, $userInfo[1]))     //verify password
+            if(password_verify($pwd, $userInfo['pwd']))     //verify password
             {
                 //将用户信息存入session, 更新類成員信息
                 $this->loginAddr = $_SESSION['loginAddr'] =  __getIP();
                 $this->isLogined = $_SESSION['isLogined'] = true;          //isLogined
-                $this->uid =    $_SESSION['uid'] = $userInfo[0];            //uid
-                $this->name =   $_SESSION['name'] = $userInfo[2];           //name
-                $this->mail =   $_SESSION['mail'] = $userInfo[3];           //mail
-                $this->lastLogin = $_SESSION['lastLogin'] = $userInfo[4];   //lastLogin
-                $this->loginTimes = $_SESSION['loginTimes'] = $userInfo[5]; //LoginTimes
-                $this->enable = $_SESSION['enable'] = $userInfo[7];         //enable
+                $this->uid =    $_SESSION['uid'] = $userInfo['uid'];            //uid
+                $this->name =   $_SESSION['name'] = $userInfo['name'];           //name
+                $this->mail =   $_SESSION['mail'] = $userInfo['mail'];           //mail
+                $this->lastLogin = $_SESSION['lastLogin'] = $userInfo['lastLogin'];   //lastLogin
+                $this->loginTimes = $_SESSION['loginTimes'] = $userInfo['loginTimes']; //LoginTimes
+                $this->enable = $_SESSION['enable'] = $userInfo['enable'];         //enable
                 $this->role = $_SESSION['role'] = $this->uconn->getLine("select name from role where code in(select rid from urid where uid='{$uid}' )");
                 $this->fun  = $_SESSION['fun'] = $this->uconn->getLine("select name from fun  where code in(select fid from rfid where rid in (select rid from urid where uid='{$uid}'))");
 
@@ -300,16 +299,9 @@ class User
 
         if($this->uid == "admin") return true;
 
-        $sql = "select name from fun where code in(select fid from rfid where rid in (select rid from urid where uid='{$this->uid}'))";
-        if($fList = $this->uconn->getLine($sql))
+        if(in_array($fname,$this->fun))
         {
-            if(in_array($fname,$fList))
-            {
-                return true;
-            } else {
-                if($alert) __showMsg('沒有權限訪問當前業務.');
-                return false;
-            }
+            return true;
         } else {
             if($alert) __showMsg('沒有權限訪問當前業務.');
             return false;
@@ -326,14 +318,8 @@ class User
     {
         if ($this->uid == "admin") return true;
 
-        $sql = "select name from role where code in (select rid from urid where uid='{$this->uid}')";
-        if ($rList = $this->uconn->getLine($sql)) {
-            if (in_array($rName, $rList)) {
-                return true;
-            } else {
-                if ($alert) __showMsg('沒有權限訪問當前業務.');
-                return false;
-            }
+        if (in_array($rName, $this->role)) {
+            return true;
         } else {
             if ($alert) __showMsg('沒有權限訪問當前業務.');
             return false;

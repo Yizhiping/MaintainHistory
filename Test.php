@@ -14,6 +14,8 @@
 //$res = $mianTain->search(array('line','errCode'), array('line'=>'3J'));
 //
 
-$arr = array('a'=>1, 'b'=>2);
+$abc=1111;
+$efg=222;
 
-echo $arr[0];
+$a = 'abc';
+echo $$a;

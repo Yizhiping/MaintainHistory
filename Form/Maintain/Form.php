@@ -32,17 +32,20 @@
     <tr>
         <td class="maintainTitle">日期:</td>
         <td>
-            <input type="date" id="date" name="date" value="<?php echo date("Y-m-d")?>" class="input">
+            <input type="date" id="date" name="date" value="<?php echo empty($date) ? date("Y-m-d") : $date ;?>" class="input">
         </td>
         <td class="maintainTitle">班別:</td>
         <td>
-            <select name="shift">
+            <select id="shift" name="shift">
                 <option value="Day">白班</option>
                 <option value="Night"
                 <?php
-                $hour = (int)date('H');
-                 if($hour >= 20 && $hour <= 8)
-                     echo " selected = selected";
+                if(empty($shift)) {
+                    if(((int)date('H')) >= 20 &&((int)date('H')) < 8) echo " selected = selected";
+                } else if($shift=='Night') {
+                    echo " selected = selected";
+                }
+
                     ?>
                 >夜班</option>
             </select>
@@ -82,8 +85,15 @@
                 <?php __createSelectItem($conn->getLine("select code from errorcode order by code"))   ?>
             </ul>
         </td>
+        <td class="maintainTitle">異常類別:</td>
+        <td>
+            <input type="text" id="errClass" name="errClass" value="<?php echo $errClass ?>" class="selInput">
+            <ul id="selErrClass" name="selErrClass" class="itemList">
+                <?php __createSelectItem($conn->getLine("select name from errorClass order by name"))   ?>
+            </ul>
+        </td>
         <td class="maintainTitle">現象描述:</td>
-        <td colspan="5" title="簡單描述異常的現象, 如產品不上電,測試程式無反應,XX項測試不良."><input type="text" name="errDesc" id="errDesc" value="<?php echo $errDesc ?>" style="width: 100%;"></td>
+        <td colspan="3" title="簡單描述異常的現象, 如產品不上電,測試程式無反應,XX項測試不良."><input type="text" name="errDesc" id="errDesc" value="<?php echo $errDesc ?>" style="width: 100%;"></td>
     </tr>
     <tr>
         <td class="maintainTitle">異常原因:</td>
@@ -114,12 +124,12 @@
     <tr>
         <td>狀態:</td>
         <td>
-            <select name="state">
+            <select name="state" id="state">
                 <option value="0">未結案</option>
                 <option value="1" <?php echo $state == "1" ? "selected='selected'" : null?>>已結案</option>
             </select>
         </td>
         <td class="maintainTitle">處理人:</td>
-        <td colspan="8" title="該異常的責任人"><input type="text" id="owner" name="owner" value="<?php echo $owner ?>" style="width: 100%;"></td>
+        <td colspan="8" title="該異常的責任人"><input readonly="readonly" type="text" id="owner" name="owner" value="<?php echo $owner ?>" style="width: 100%;"></td>
     </tr>
 </table>

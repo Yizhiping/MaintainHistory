@@ -115,7 +115,15 @@ class MysqlConn
         $res = $this->getAllRow($sql);
         if(sizeof($res)>0)
         {
-            return $res[0][0];
+            foreach ($res as $a)
+            {
+                foreach ($a as $b)
+                {
+                    return $b;
+                    break;
+                }
+            }
+
         } else {
             return false;
         }
@@ -155,5 +163,6 @@ class MysqlConn
     {
         return $this->errNo;
     }
+
 }
 

@@ -40,9 +40,9 @@ if(!empty(__get('btnFunDel')))
 
 //以checkbox呈現所有功能
 $funListstr = "";
-foreach ($conn->getAllRow("select code,name from fun order by Name") as $f)
+foreach ($conn->getAllRow("select code,name from fun order by Name") as $fun)
 {
-    $funListstr .= "<li><label for='{$f[0]}'>{$f[1]}</label><input type='checkbox' id='{$f[0]}' name='{$f[0]}' value='{$f[0]}'/></li>";
+    $funListstr .= "<li><label for='{$fun['code']}'>{$fun['name']}</label><input type='checkbox' id='{$fun['code']}' name='{$fun['code']}' value='{$fun['code']}'/></li>";
 }
 
 ?>

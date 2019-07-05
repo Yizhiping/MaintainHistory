@@ -33,6 +33,12 @@
                 alert("Device不能為空.");
                 return false;
             }
+            if($('#errClass').val() == "")
+            {
+                $('#errClass').focus();
+                alert("類別不能為空.");
+                return false;
+            }
             if($('#errDesc').val() == "")
             {
                 $('#errDesc').focus();

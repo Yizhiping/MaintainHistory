@@ -54,13 +54,13 @@
             <li>維護記錄
                 <ul>
                     <li><a href="?act=maintain/add">添加</a></li>
-                    <li><a href="?act=maintain/update">更新</a></li>
-                    <li><a href="?act=maintain/search">個人專區</a></li>
+<!--                    <li><a href="?act=maintain/update">更新</a></li>-->
+                    <li><a href="?act=maintain/personal">個人專區</a></li>
                 </ul>
             </li>
             <li>查詢
                 <ul>
-                    <li><a>項目1</a></li>
+                    <li><a href="?act=maintain/search">查詢資料</a></li>
                     <li><a>項目2</a></li>
                 </ul>
             </li>

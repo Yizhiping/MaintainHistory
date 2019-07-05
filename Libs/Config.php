@@ -37,7 +37,8 @@ $actList = array(
 $methodList = array(
     'add'=>'添加',
     'update'=>'更新',
-    'search'=>'查找'
+    'search'=>'查找',
+    'personal'=>'個人專區'
 );
 
 

@@ -47,18 +47,18 @@ if(!empty(__get('btnUserDel')))
 
 //獲取所有用戶列表, 打印用戶下拉列表
 $opstr = "";
-foreach ($conn->getLine("select uid from users") as $u)
+foreach ($conn->getAllRow("select uid,name from users") as $u)
 {
-    if($uid == $u)
+    if($uid == $u['uid'])
     {
-        $opstr .= "<option selected='selected' value='{$u}'>{$u}</option>";
+        $opstr .= "<option selected='selected' value='{$u['uid']}'>{$u['name']}</option>";
     } else {
-        $opstr .= "<option value='{$u}'>{$u}</option>";
+        $opstr .= "<option value='{$u['uid']}'>{$u['name']}</option>";
     }
 }
 
 //獲取所有角色信息
-$roles = $conn->getAllRow("select name,code from role");
+$roles = $conn->getAllRow("select code,name from role");
 
 //更新用戶角色
 if(!empty(__get('btnUpdateRole')))
@@ -69,9 +69,9 @@ if(!empty(__get('btnUpdateRole')))
     //插入角色信息
     foreach ($roles as $r)
     {
-        if(!empty(__get($r[1])))
+        if(!empty(__get($r['code'])))
         {
-            $user->addByUserToURID($uid,$r[1]);
+            $user->addByUserToURID($uid,$r['code']);
         }
     }
     __showMsg("角色信息更新成功.");
@@ -83,11 +83,11 @@ $urids = $conn->getLine("select rid from urid where uid ='{$uid}'");    //獲取
 if(!is_array($urids)) $urids = array();                                        //如果沒有賦值空
 foreach ( $roles as $r)
 {
-    if(in_array($r[1],$urids))
+    if(in_array($r['code'],$urids))
     {
-        $roleChkBoxstr .= "<div><label for='{$r[1]}'>{$r[0]}</label><input type='checkbox' name='{$r[1]}' id='{$r[1]}' value='{$r[0]}' checked='checked'/></div>";
+        $roleChkBoxstr .= "<div><label for='{$r['code']}'>{$r['name']}</label><input type='checkbox' name='{$r['code']}' id='{$r['code']}' value='{$r['name']}' checked='checked'/></div>";
     } else {
-        $roleChkBoxstr .= "<div><label for='{$r[1]}'>{$r[0]}</label><input type='checkbox' name='{$r[1]}' id='{$r[1]}' value='{$r[0]}'/></div>";
+        $roleChkBoxstr .= "<div><label for='{$r['code']}'>{$r['name']}</label><input type='checkbox' name='{$r['code']}' id='{$r['code']}' value='{$r['name']}'/></div>";
     }
 }
 

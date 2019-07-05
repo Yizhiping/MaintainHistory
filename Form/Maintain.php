@@ -29,6 +29,7 @@ $model = __get('model');
 $station = __get('station');
 $device = __get('device');
 $errCode = __get('errCode');
+$errClass = __get('errClass');
 $errDesc = __get('errDesc');
 $rootCause = __get('rootCause');
 $causeAnalysis = __get('causeAnalysis');
@@ -40,8 +41,7 @@ $owner = __get('owner');
 switch ($method)
 {
     case 'add':
-    $owner = $user->uid;
-
+        $owner = $user->uid;
         if(!empty(__get('btnMaintainAdd'))) {
             $maintainInfo = $maintain->sampleHistory;
             $maintainInfo['date'] = $date;
@@ -51,6 +51,7 @@ switch ($method)
             $maintainInfo['station'] = $station;
             $maintainInfo['device'] = $device;
             $maintainInfo['errCode'] = $errCode;
+            $maintainInfo['errClass'] = $errClass;
             $maintainInfo['errDesc'] = $errDesc;
             $maintainInfo['rootCause'] = $rootCause;
             $maintainInfo['causeAnalysis'] = $causeAnalysis;
@@ -66,21 +67,103 @@ switch ($method)
                 __showMsg("添加失敗");
             }
         }
-        break;
-
+        break;          //增加
     case 'update':
-        break;
-    case 'search':
+        $id = is_null($dat) ? $id : $dat;        //url的第三個參數為id
+        if (!is_numeric($id)) {                    //id必須為數字, 負責判斷為無效
+            __showMsg("無效的請求數據");
+        } else {
+            //取得當前id的數據
+            $fields = array('id','date','shift','line','model','station','device','errCode','errClass','errDesc','rootCause','causeAnalysis','zAction','result','state','owner');
+            $filter = array('id'=>$id);
+            $maintainInfo = $maintain->search($fields, $filter);
+            $maintainInfo = $maintainInfo[0];
+            //更新
+            if(empty(__get('btnMaintainUpdate'))) {     //如果不是更新,賦值顯示的變量.
+                $date = $maintainInfo['date'];
+                $shift = $maintainInfo['shift'];
+                $line = $maintainInfo['line'];
+                $model = $maintainInfo['model'];
+                $station = $maintainInfo['station'];
+                $device = $maintainInfo['device'];
+                $errCode = $maintainInfo['errCode'];
+                $errClass = $maintainInfo['errClass'];
+                $errDesc = $maintainInfo['errDesc'];
+                $rootCause = $maintainInfo['rootCause'];
+                $causeAnalysis = $maintainInfo['causeAnalysis'];
+                $action = $maintainInfo['zAction'];
+                $result = $maintainInfo['result'];
+                $state = $maintainInfo['state'];
+                $owner = $maintainInfo['owner'];
+            } else {
+                $updateData = array('errDesc'=>$errDesc,'rootCause'=>$rootCause,'causeAnalysis'=>$causeAnalysis,'zAction'=>$action,'result'=>$result,'state'=>$state);
+                if($maintain->update($id,$updateData))
+                {
+                    __showMsg("更新成功.");
+                } else {
+                    __showMsg("更新失敗.");
+                }
+            }
+        }
+        break;       //更新
+    case 'personal':
         $startDate = __get('startDate');
         $stopDate = __get('stopDate');
         $filter = array();
-        if($state != 'All') $filter += array('state'=>$state);
-        if(!empty($line)) $filter += array('line'=>$line);
-        $searchResult = $maintain->search(array('Id','date','line','station','errCode','errDesc','rootCause','state'),
-            $filter, "date between '{$startDate}' and '{$stopDate}'");
-        break;
+        $sqlSub = null;
+        $searchResult = null;
 
+
+        if((diffBetweenTwoDays($startDate,$stopDate) !== false) && (diffBetweenTwoDays($startDate,$stopDate) <= 31)) {
+            if ($state != 'All') $filter += array('state' => $state);
+            if (!empty($line)) $filter += array('line' => $line);
+
+            if (!$user->authByRole('管理員', false)) $sqlSub = " and owner='{$user->uid}'";
+            $searchResult = $maintain->search(array('Id', 'date', 'line', 'station', 'errCode', 'errClass','errDesc', 'rootCause', 'state'),
+                $filter, "date between '{$startDate}' and '{$stopDate}'" . $sqlSub);
+        } else {
+            __showMsg("搜索的日期錯誤, 開始日期必須小雨結束日期, 且最多搜索的天數不大於30天.");
+        }
+
+        break;      //個人專區
+    case 'search':          //查找
+        $startDate = __get('startDate');
+        $stopDate = __get('stopDate');
+        $filter = array();
+        $sqlSub = null;
+        $searchResult = null;
+
+        if((diffBetweenTwoDays($startDate,$stopDate) !== false) && (diffBetweenTwoDays($startDate,$stopDate) <= 91)) {
+            $tmpArr = array();
+
+            foreach (array('line','station','errCode','model') as $key)
+            {
+                if($$key != 'All') array_push($tmpArr,"{$key}='{$$key}'");
+            }
+
+            //處理篩選條件
+            $sqlSub = implode(' and ', $tmpArr);
+            $sqlSub = empty($sqlSub) ? null : $sqlSub . ' and ';
+
+            $searchLineList = $conn->getLine("select line from maintainhistory where {$sqlSub} date between '{$startDate}' and '{$stopDate}' group by line order by line");
+            $searchStationList = $conn->getLine("select station from maintainhistory where {$sqlSub} date between '{$startDate}' and '{$stopDate}' group by station order by station");
+
+
+            $allCount  = array();
+            foreach ($searchLineList as $searchLine)
+            {
+                $lineCount = array();
+                foreach ($searchStationList as $searchStation)
+                {
+                    $lineCount += array($searchStation=>$conn->getItemByItemName("select count(id) from maintainhistory where line='{$searchLine}' and station='{$searchStation}' and date between '{$startDate}' and '{$stopDate}'"));
+                }
+                $allCount += array($searchLine=>$lineCount);
+            }
+        } else {
+            __showMsg("搜索的日期錯誤, 開始日期必須小雨結束日期, 且最多搜索的天數不大於30天.");
+        }
+        break;
 }
 
-$loadFile = file_exists("Form/Maintain/{$method}.php") ? "Form/Maintain/{$method}.php" : "Form/Maintain/search.php";
+$loadFile = file_exists("Form/Maintain/{$method}.php") ? "Form/Maintain/{$method}.php" : "Form/404.php";
 include($loadFile);
