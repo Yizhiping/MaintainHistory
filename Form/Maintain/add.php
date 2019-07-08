@@ -81,9 +81,9 @@
 </script>
 <div id="divMaintainAdd" style="margin-top: 5px;">
     <form method="post" action="?act=maintain/add" id="formMaintainAdd">
-        <div style="background-color: #00C1B3"><input type="reset" value="清空重填" class="button"><input type="submit" value="添加記錄" name="btnMaintainAdd" id="btnMaintainAdd"></div>
 <?php
 include("Form/Maintain/Form.php");
 ?>
+        <div><input type="reset" value="清空重填" class="button"><input type="submit" value="添加記錄" name="btnMaintainAdd" id="btnMaintainAdd"></div>
     </form>
 </div>

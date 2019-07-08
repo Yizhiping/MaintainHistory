@@ -41,7 +41,7 @@ class User
                 $this->uid = $_SESSION["uid"];
                 $this->name = $_SESSION["name"];
                 $this->mail = $_SESSION["mail"];
-                $this->isLogined = $_SESSION["isLogined"];
+                $this->isLogined = true;
                 $this->lastLogin = $_SESSION['lastLogin'];
                 $this->loginAddr = $_SESSION['loginAddr'];
                 $this->loginTimes= $_SESSION['loginTimes'];
@@ -297,8 +297,8 @@ class User
         //$err = false;
         //獲取所有用戶角色
 
-        if($this->uid == "admin") return true;
-
+        if($this->uid == "admin") return true;      //管理員跳過檢查
+        if(!is_array($this->fun)) return false;     //無功能返回false
         if(in_array($fname,$this->fun))
         {
             return true;
@@ -316,8 +316,8 @@ class User
      */
     function authByRole($rName, $alert=true)
     {
-        if ($this->uid == "admin") return true;
-
+        if ($this->uid == "admin") return true;         //管理員跳過檢查
+        if (!is_array($this->role)) return false;       //無角色返回false
         if (in_array($rName, $this->role)) {
             return true;
         } else {

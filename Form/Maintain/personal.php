@@ -79,7 +79,7 @@
     if(count($searchResult) >= 1 && is_array($searchResult))
     {
         echo "<table>";
-        echo "<tr><td>序號</td><td>日期</td><td>線體</td><td>站位</td><td>代碼</td><td>類別</td><td>現象</td><td>原因</td><td>狀態</td><td></td></tr>";
+        echo "<tr><td>序號</td><td>日期</td><td>線體</td><td>站位</td><td>錯誤代碼</td><td>類別</td><td>現象</td><td>原因</td><td>狀態</td><td></td></tr>";
         $i = 0;
         foreach ($searchResult as $result)
         {

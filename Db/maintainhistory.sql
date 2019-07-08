@@ -1,5 +1,5 @@
-﻿# Host: localhost  (Version: 5.5.53)
-# Date: 2019-07-04 17:36:25
+﻿# Host: 172.22.255.125  (Version: 5.0.96-community-nt)
+# Date: 2019-07-08 18:00:26
 # Generator: MySQL-Front 5.3  (Build 4.234)
 
 /*!40101 SET NAMES utf8 */;
@@ -10,10 +10,10 @@
 
 DROP TABLE IF EXISTS `customerlist`;
 CREATE TABLE `customerlist` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '客戶名稱',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客戶清單';
+  `Id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '' COMMENT '客戶名稱',
+  PRIMARY KEY  (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='客戶清單';
 
 #
 # Data for table "customerlist"
@@ -22,18 +22,35 @@ CREATE TABLE `customerlist` (
 INSERT INTO `customerlist` VALUES (1,'ARRIS'),(2,'PACE'),(3,'RUCKS'),(4,'ASUS');
 
 #
+# Structure for table "errorclass"
+#
+
+DROP TABLE IF EXISTS `errorclass`;
+CREATE TABLE `errorclass` (
+  `Id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '' COMMENT '類別',
+  PRIMARY KEY  (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='異常類別';
+
+#
+# Data for table "errorclass"
+#
+
+INSERT INTO `errorclass` VALUES (1,'程式'),(2,'接觸性'),(3,'電腦'),(4,'校驗');
+
+#
 # Structure for table "errorcode"
 #
 
 DROP TABLE IF EXISTS `errorcode`;
 CREATE TABLE `errorcode` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) NOT NULL DEFAULT '' COMMENT '錯誤代碼',
-  `descEN` varchar(255) NOT NULL DEFAULT '' COMMENT '英文描述',
-  `descCH` varchar(255) NOT NULL DEFAULT '' COMMENT '中文描述',
-  PRIMARY KEY (`Id`),
+  `Id` int(11) NOT NULL auto_increment,
+  `code` varchar(255) NOT NULL default '' COMMENT '錯誤代碼',
+  `descEN` varchar(255) NOT NULL default '' COMMENT '英文描述',
+  `descCH` varchar(255) NOT NULL default '' COMMENT '中文描述',
+  PRIMARY KEY  (`Id`),
   KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='錯誤代碼';
+) ENGINE=InnoDB AUTO_INCREMENT=4096 DEFAULT CHARSET=utf8 COMMENT='錯誤代碼';
 
 #
 # Data for table "errorcode"
@@ -48,9 +65,9 @@ INSERT INTO `errorcode` VALUES (1371,'BDFWD4','QCA 2G ANT2 TX Calibration Fail',
 
 DROP TABLE IF EXISTS `fun`;
 CREATE TABLE `fun` (
-  `code` varchar(11) NOT NULL DEFAULT '',
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`code`)
+  `code` varchar(11) NOT NULL default '',
+  `name` varchar(255) default NULL,
+  PRIMARY KEY  (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='功能清單';
 
 #
@@ -65,12 +82,12 @@ INSERT INTO `fun` VALUES ('FID_5d1b077','维护记录创建'),('FID_5d1b079','�
 
 DROP TABLE IF EXISTS `linelist`;
 CREATE TABLE `linelist` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `line` varchar(255) NOT NULL DEFAULT '' COMMENT '線體名稱',
-  `customer` varchar(255) NOT NULL DEFAULT '' COMMENT '客戶別',
-  PRIMARY KEY (`Id`),
+  `Id` int(11) NOT NULL auto_increment,
+  `line` varchar(255) NOT NULL default '' COMMENT '線體名稱',
+  `customer` varchar(255) NOT NULL default '' COMMENT '客戶別',
+  PRIMARY KEY  (`Id`),
   UNIQUE KEY `line` (`line`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='線體清單';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='線體清單';
 
 #
 # Data for table "linelist"
@@ -84,31 +101,32 @@ INSERT INTO `linelist` VALUES (1,'3H','ARRIS'),(2,'3I','ARRIS'),(3,'3J','ARRIS')
 
 DROP TABLE IF EXISTS `maintainhistory`;
 CREATE TABLE `maintainhistory` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `date` date NOT NULL DEFAULT '0000-00-00' COMMENT '日期',
-  `time` time NOT NULL DEFAULT '00:00:00' COMMENT '時間',
-  `shift` varchar(255) DEFAULT NULL COMMENT '班別',
-  `line` varchar(255) NOT NULL DEFAULT '' COMMENT '線體',
-  `model` varchar(255) NOT NULL DEFAULT '' COMMENT '機種',
-  `station` varchar(255) NOT NULL DEFAULT '' COMMENT '站別',
-  `device` varchar(255) NOT NULL DEFAULT '' COMMENT '撥號/第幾集',
-  `errCode` varchar(255) DEFAULT NULL COMMENT '不良代碼',
-  `errDesc` varchar(255) NOT NULL DEFAULT '' COMMENT '異常現象描述',
-  `rootCause` varchar(255) NOT NULL DEFAULT '' COMMENT '問題點',
+  `Id` int(11) NOT NULL auto_increment,
+  `date` date NOT NULL default '0000-00-00' COMMENT '日期',
+  `time` time NOT NULL default '00:00:00' COMMENT '時間',
+  `shift` varchar(255) default NULL COMMENT '班別',
+  `line` varchar(255) NOT NULL default '' COMMENT '線體',
+  `model` varchar(255) NOT NULL default '' COMMENT '機種',
+  `station` varchar(255) NOT NULL default '' COMMENT '站別',
+  `device` varchar(255) NOT NULL default '' COMMENT '撥號/第幾集',
+  `errCode` varchar(255) default NULL COMMENT '不良代碼',
+  `errClass` varchar(255) NOT NULL default '' COMMENT '異常類別',
+  `errDesc` varchar(255) NOT NULL default '' COMMENT '異常現象描述',
+  `rootCause` varchar(255) NOT NULL default '' COMMENT '問題點',
   `CauseAnalysis` text NOT NULL COMMENT '原因分析',
   `zAction` text NOT NULL COMMENT '對策',
-  `result` varchar(255) NOT NULL DEFAULT '' COMMENT '處理結果',
-  `State` tinyint(1) NOT NULL DEFAULT '0' COMMENT '狀態',
-  `owner` varchar(255) NOT NULL DEFAULT '' COMMENT '處理人',
-  `ModifyTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '記錄更新時間',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COMMENT='維護記錄';
+  `result` varchar(255) NOT NULL default '' COMMENT '處理結果',
+  `State` tinyint(1) NOT NULL default '0' COMMENT '狀態',
+  `owner` varchar(255) NOT NULL default '' COMMENT '處理人',
+  `ModifyTime` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT '記錄更新時間',
+  PRIMARY KEY  (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=90498 DEFAULT CHARSET=utf8 COMMENT='維護記錄';
 
 #
 # Data for table "maintainhistory"
 #
 
-INSERT INTO `maintainhistory` VALUES (38,'2019-07-04','00:00:00','Day','3J','T25','FWDL','321','BDFA03','3213','321','3213','3213','3213',1,'S09264888','2019-07-04 14:45:53');
+INSERT INTO `maintainhistory` VALUES (90422,'2019-06-27','00:00:00','Day','NA','TG2492','WifiThroughput','581887','BDFW4F','','','5G測試值不穩定','衰減可能過小','調試衰減5G增加3DB衰減','觀察后比之前穩定',1,'S18004140','2019-07-08 11:28:31'),(90423,'2019-06-27','00:00:00','Day','NA','TG2492','WifiThroughput','581970','BDFW01','','','5GPing不通','golden板斷ping','重新下指令','測試OK',1,'S19078103','2019-07-08 11:28:31'),(90424,'2019-06-27','00:00:00','Day','NA','TG2492','WifiThroughput','864448','BDFW01','','','5GPing不通','golden板斷ping','重新下指令','測試OK',1,'S17009255','2019-07-08 11:28:31'),(90425,'2019-06-27','00:00:00','Day','3P','CM8200','MPKI','563936','BDFR08','','','PKI測試不良','PKI程式卡死','重開PKI程式','測試OK',1,'S17027936','2019-07-08 09:29:43'),(90426,'2019-06-27','00:00:00','Day','NA','TG2492','WifiThroughput','864450','BDFO1Y','','','NUTTCP指令無法執行','golden板卡死','重啟golden，重下指令','測試OK',1,'S14011729','2019-07-08 11:28:31'),(90427,'2019-06-27','00:00:00','Day','NA','TG2482','Beamforming','整組','NA','','程式測試PASS，MTD程式無反應','MTD程式影響我們程式','MTD程式卡死','我們重新開程式','測試OK',1,'S16040916','2019-07-08 11:28:31'),(90428,'2019-06-27','00:00:00','Day','NA','TG2482','WIFI','580577','NA','','R2NI自動重啟','NI有重啟的現象','MTD程式卡死','重新開好程式','測試OK',1,'S18122958','2019-07-08 11:28:31'),(90429,'2019-06-27','00:00:00','Day','NA','TG2482','AFTSII','兩組','NA','','1012項測試Fail','1012項電話線接觸不穩定','電話轉接線接觸不良','更換電話轉接線或更換電話水晶頭','測試OK',1,'S17034804','2019-07-08 11:28:31'),(90430,'2019-06-27','00:00:00','Day','NA','TG2482','WifiThroughput','581664','BDFlO1','','','百兆網絡不穩定','測試網線損壞','更換測試網線','測試OK',1,'S19074890','2019-07-08 11:28:31'),(90431,'2019-06-27','00:00:00','Day','NA','TG2482','NVM','整組','BDFb01','','','PKI測試不良','PKI點開鏈接','重新連接PKI','測試OK',1,'S19014831','2019-07-08 11:28:31'),(90432,'2019-06-28','00:00:00','Day','NA','TG2492','WifiThroughput','581887','BDFW01','','','5GPing不通','golden板斷ping','重新下指令','測試OK',1,'S19078103','2019-07-08 11:28:31'),(90433,'2019-06-28','00:00:00','Day','NA','TG2492','WIFI','728078','iPLAS','','程式報錯','iPLAS沒開起來','','重啟NI','測試OK',1,'S17027936','2019-07-08 11:28:31'),(90434,'2019-06-28','00:00:00','Day','NA','TG2492','WifiThroughput','581882','BDFW01','','','5GPing不通','golden板斷ping','重新下指令','測試OK',1,'S18004140','2019-07-08 11:28:31'),(90435,'2019-06-28','00:00:00','Day','NA','TG2482','NVM','560037',NULL,'','測試PC自動重啟','PKI測試不良','卡機，pki網線連接不良','重啟電腦并重新連接pki','測試OK',1,'S18122958','2019-07-08 11:28:31'),(90436,'2019-06-28','00:00:00','Day','NA','TG2482','WifiThroughput','581658','BDFWHW','','','5GPing不通','golden板斷ping','重新下指令','測試OK',1,'S19074890','2019-07-08 11:28:31'),(90437,'2019-06-28','00:00:00','Day','NA','TG2492','WifiThroughput','864448','BDFWHU','','2.4G_BitRate_TX值偏低','2.4G_BitRate_TX值偏低','','調試衰減棒','測試OK',1,'S17009255','2019-07-08 11:28:31'),(90438,'2019-06-28','00:00:00','Day','NA','TG2482','ARFTS','580661','NA','','A組測試中卡機','A組測試中一直顯示測試中長達\n15分鐘，未出Fail&Pass','MTD程式BUG,\n未設置長時間測試卡機不報錯','A組板子重斷上電電重新測試A組','測試OK',1,'S16040916','2019-07-08 11:28:31'),(90439,'2019-06-29','00:00:00','Day','NA','TG2492','WIFI','728077','BDFW2F','','測試無信號','','','NI效驗一下，重開程式','測試OK',1,'S17027936','2019-07-08 11:28:31'),(90440,'2019-06-29','00:00:00','Day','NA','TG2482','FTTS','580663','NA','','測試PASS，MTD電腦界面不上傳','MTD程式連接測試電腦小鍵盤無法控制到','MTD程式卡死','請MTD人員清板重開MTD程式后已連接','測試OK',1,'S16040916','2019-07-08 11:28:31'),(90441,'2019-06-29','00:00:00','Day','NA','TG2482','FTTS','580663','NA','','FTTS測試A組中一個不聯網，導致不測試','A組2.4.6.8中4不聯網','驗證為測試機台不聯網','請MTD人員停掉程式后重新把4號板更換后','測試OK',1,'S18122958','2019-07-08 11:28:31'),(90442,'2019-06-29','00:00:00','Day','NA','TG2492','WifiThroughput','581880','BDFW01','','','5GPing不通','golden板斷ping','重新下指令','測試OK',1,'S18004140','2019-07-08 11:28:31'),(90443,'2019-07-01','00:00:00','Day','NA','TG2492','WifiThroughput','864498','BDFW4G','','5GRX測試值偏小','','衰減可能過大','調試衰減棒','測試OK',1,'S17009255','2019-07-08 11:28:31'),(90444,'2019-07-01','00:00:00','Day','NA','TG2492','PKI','864466','NA','','測試PC卡死','PC卡死和機械臂連不上','','重啟PC,重開程式和PKI','測試OK',1,'S19078103','2019-07-08 11:28:31'),(90445,'2019-07-01','00:00:00','Day','NA','TG2492','AFTSII','兩機','NA','','SFIS掉線','','','總電源拔插','測試OK',1,'S18041167','2019-07-08 11:28:31'),(90446,'2019-07-01','00:00:00','Day','NA','TG2492','AFTSII','581878','板子卡不良','','測試狀態，板子卡下不良','板子不良','板子不良，導致PC卡死','重啟電腦和PC','測試OK',1,'S17034804','2019-07-08 11:28:31'),(90447,'2019-07-01','00:00:00','Day','3P','CM8200','ARFTS','581581','BDFO01','','A1DS測試值偏上限','','A1電源線磨損嚴重','更換電源線','測試OK',1,'S18027783','2019-07-08 09:29:43'),(90448,'2019-07-01','00:00:00','Day','NA','TG3492','WIFI','','不開機反復重啟','','反復從起','反復開機重啟','','重啟NI','測試OK',1,'S17006184','2019-07-08 11:28:31'),(90449,'2019-07-01','00:00:00','Day','NA','TG2482','WifiThroughput','581656','BDFW01','','5G未ping通測試不過','5G測試值不穩定','golden板斷ping','重新下指令','測試OK',1,'S18122958','2019-07-08 11:28:31'),(90450,'2019-07-01','00:00:00','Day','NA','TG2492','WifiThroughput','581888','BDFW4G','','2.4G測試Fail','2.4G測試不穩定','golden板斷ping','重新下指令','測試OK',1,'S19048207','2019-07-08 11:28:31'),(90451,'2019-07-01','00:00:00','Day','NA','TG2482','NVM','整組','BDFO1Y','','程式測試無信號','程式掉線','卡機，pki網線連接不良','重開程式','測試OK',1,'S19074890','2019-07-08 11:28:31'),(90452,'2019-06-27','00:00:00','Day','3N','TG2482','WIFI','072-0','NA','','2G第三根針沒值','2G第三根針折斷','更換探針，重新固定','更換探針，重新固定','觀察中',0,'S18052387','2019-07-08 09:29:43'),(90453,'2019-06-27','00:00:00','Day','NA','TG2482','Power','無','BDFP23','','LINE2值偏小','治具板損壞','更換治具板','更換治具板','測試PASS',1,'S18038751','2019-07-08 11:28:31'),(90454,'2019-06-27','00:00:00','Day','3L','TG2482','WIFI','075-2','NA','','卡點2437測試不過','底根探針測試不良','更換探針.小藍線','更換探針.小藍線','觀察中',0,'S17024594','2019-07-08 09:29:43'),(90455,'2019-06-27','00:00:00','Day','NA','TG2492','WIFI','','BDFI22','','網線損壞','網線不聯網','更換網線','更換網線','PASS',1,'S14004300','2019-07-08 11:28:31'),(90456,'2019-06-27','00:00:00','Day','3M','TG2492','FinalCheck','1893','BDFP02','','電源模塊鬆動','電源打不到位置','從新固定螺絲','從新固定螺絲','PASS',1,'S18035524','2019-07-08 09:29:43'),(90457,'2019-06-27','00:00:00','Day','NA','TG2482','Power','無','BDFPOY','','USB沒測到值','切換10歐姆電阻無反應','更換治具板relay','更換治具板relay','PASS',1,'S18159549','2019-07-08 11:28:31'),(90458,'2019-06-27','00:00:00','Day','3N','TG2482','WIFI','072-0','NA','','2G第三根針沒值','2G第三根針折斷','更換探針，重新固定','更換探針，重新固定','觀察中',0,'S18052387','2019-07-08 09:29:43'),(90459,'2019-06-27','00:00:00','Day','NA','TG2482','Power','無','BDFP23','','LINE2值偏小','治具板損壞','更換治具板','更換治具板','測試PASS',1,'S18038751','2019-07-08 11:28:31'),(90460,'2019-06-27','00:00:00','Day','3L','TG2482','WIFI','075-2','NA','','卡點2437測試不過','底根探針測試不良','更換探針.小藍線','更換探針.小藍線','觀察中',0,'S17024594','2019-07-08 09:29:43'),(90461,'2019-06-27','00:00:00','Day','NA','TG2492','WIFI','','BDFI22','','網線損壞','網線不聯網','更換網線','更換網線','PASS',1,'S14004300','2019-07-08 11:28:31'),(90462,'2019-06-27','00:00:00','Day','NA','TG2492','FinaI','','BDFP02','','電源模塊鬆動','電源打不到位置','從新固定螺絲','從新固定螺絲','PASS',1,'S18035524','2019-07-08 11:28:31'),(90463,'2019-06-27','00:00:00','Day','NA','TG2482','Beamforming','#2','不進入測試狀態','','不聯網','網絡線脫焊','重新焊接','重新焊接','ok',1,'S17027677','2019-07-08 11:28:31'),(90464,'2019-06-27','00:00:00','Day','NA','TG2482','FinaI','#6','治具無法使用','','usb打不到位','usb移位','重新調試','重新調試','OK',1,'S17027677','2019-07-08 11:28:31'),(90465,'2019-06-27','00:00:00','Day','3M','TG2492','WIFI','062—6','BDFWOR','','2G第2根針偏移','螺絲鬆動','調試針點 固定螺絲','調試針點 固定螺絲','pass',1,'S18103110','2019-07-08 09:29:43'),(90466,'2019-06-27','00:00:00','Day','NA','TG2492','Power','728074','BAFP22','','CPTC測試不過','小綠豆損壞','更換小綠豆','更換小綠豆','pass',1,'S19047313','2019-07-08 11:28:31'),(90467,'2019-06-27','00:00:00','Day','NA','TG2492','Power','728086','BDFP1B','','TP502端子上線體脫落-','接線時端子沒有完全固定好螺絲','重新接線  整理好內部接線','重新接線  整理好內部接線','ok',1,'S16031429','2019-07-08 11:28:31'),(90468,'2019-06-27','00:00:00','Day','NA','TG2492','WIFI','728077','BDFWOK','','藍線鬆動','多次下壓藍線鬆動','重新固定','重新固定','pass',1,'S18199383','2019-07-08 11:28:31'),(90469,'2019-06-27','00:00:00','Day','NA','TG2492','WIFI','728077','BDFW6D','','藍線損壞','治具移位導致藍線升降的時候被撞壞','治具重新擺放到位 更換藍線','治具重新擺放到位 更換藍線','pass',1,'S16038773','2019-07-08 11:28:31'),(90470,'2019-06-28','00:00:00','Day','NA','TG2482','Power','#3','無IO信號','','8051和IO板無電','24V變壓器接觸不良','重新緊固輸出口電源線','重新緊固輸出口電源線','OK',1,'S17027677','2019-07-08 11:28:31'),(90471,'2019-06-28','00:00:00','Day','NA','TG2482','WifiThroughput','#4','機械臂感應到異常產品','','產品感應器不亮','感應器線未固定牢固，導致感應器損壞','更換感應器，并固定感應器線','更換感應器，并固定感應器線','OK',1,'S17027677','2019-07-08 11:28:31'),(90472,'2019-06-28','00:00:00','Day','NA','TG2492','Power','','BDFO0P','','板子不上電','PSS2005死機程式控制不到','重啟PSS2005','重啟PSS2005','OK',1,'S14004300','2019-07-08 11:28:31'),(90473,'2019-06-28','00:00:00','Day','NA','TG2492','WifiThroughput','#8','不聯網','','網絡口打不進去','網絡口模組位移','重調網絡口','重調網絡口','PASS',1,'S18159549','2019-07-08 11:28:31'),(90474,'2019-06-28','00:00:00','Day','NA','TG2492','WifiThroughput','#1','不聯網','','網絡口損壞','轉接頭短頻','更換網絡轉接頭','更換網絡轉接頭','PAss',1,'S18029719','2019-07-08 11:28:31'),(90475,'2019-06-28','00:00:00','Day','NA','TG2492','WIFI','#6','BDFW26','','探針髒污','長期使用','更換探針','更換探針','PASS',1,'S18115457','2019-07-08 11:28:31'),(90476,'2019-06-28','00:00:00','Day','3L','TG3492','ARFTS','All','cable頭鬆動','','cable頭鬆動','未安裝模塊','取消纏繞靜電膠帶安裝模塊固定','取消纏繞靜電膠帶安裝模塊固定','PASS',1,'S17016839','2019-07-08 09:29:43'),(90477,'2019-06-29','00:00:00','Day','NA','TG2492','Final','581841','BDFI22','','REST無動作','電磁閥連接線破損','更換線材','更換線材','pass',1,'S18115457','2019-07-08 11:28:31'),(90478,'2019-06-29','00:00:00','Day','NA','TG2492','WIFI','728077-2','BDFW3K','','探針偏移','調整探針','調整探針','調整探針','pass',1,'S17016839','2019-07-08 11:28:31'),(90479,'2019-06-29','00:00:00','Day','NA','TG2492','Power','728071','BDFP21','','RT1測不到值','橡膠線沒插進脫落','重新插并緊固','重新插并緊固','pass',1,'S18038751','2019-07-08 11:28:31'),(90480,'2019-06-29','00:00:00','Day','3P','CM8200','NVM','563963','不進入測試','','不聯網','網絡轉接頭損壞','更換網絡轉接頭','更換網絡轉接頭','PASS',1,'S18103110','2019-07-08 09:29:43'),(90481,'2019-06-29','00:00:00','Day','NA','TG2492','WIFI','728077-3','BDFW2F','','主藍線損壞','治具上下移動撞壞','更換藍線，治具固定位置','更換藍線，治具固定位置','PASS',1,'S19047313','2019-07-08 11:28:31'),(90482,'2019-06-30','00:00:00','Day','NA','TG2492','WIFI','728077-1','治具上升','','治具測試自動上升','治具氣缸螺絲鬆動','重新加固氣缸螺絲','重新加固氣缸螺絲','pass',1,'S17016839','2019-07-08 11:28:31'),(90483,'2019-06-30','00:00:00','Day','NA','TG2492','WifiThroughput','#1#2','感應器','','感應器狀態不對','該應器狀態反的','重新調整感應器重新固定OK','重新調整感應器重新固定OK','Pass',1,'S18029719','2019-07-08 11:28:31'),(90484,'2019-07-01','00:00:00','Day','NA','TG2482','WIFI','073-5','WOJ','','2G第一根針沒值','2G第一根針折斷','更換探針，重新調整固定','更換探針，重新調整固定','PASS',1,'S18052387','2019-07-08 11:28:31'),(90485,'2019-07-01','00:00:00','Day','NA','TG2482','ARFTS','N','A1沒值','','K保頭損壞','K保頭使用時間過長，磨損，功能NG','更換K保頭，重新調試固定','更換K保頭，重新調試固定','PASS',1,'S16038773','2019-07-08 11:28:31'),(90486,'2019-07-01','00:00:00','Day','3L','TG3492','Power','L 線','BDFPIB','','TP502探針斷裂','長時間使用導致針點磨損','更換測試探針','更換測試探針','PAss',1,'S17024594','2019-07-08 09:29:43'),(90487,'2019-07-01','00:00:00','Day','3P','CM8200','FinaI','ALL','BDFI13','','電源轉接線所懷','使用時間過長磨損嚴重','更壞，調試OK','更壞，調試OK','PASS',1,'S18035524','2019-07-08 09:29:43'),(90488,'2019-07-01','00:00:00','Day','NA','TG2492','Power','728075','BDFO0P','','網絡轉接頭未插到位','聯動模組螺絲未緊固到位','網絡口重新插并擰緊螺絲','網絡口重新插并擰緊螺絲','PASS',1,'S18038751','2019-07-08 11:28:31'),(90489,'2019-07-01','00:00:00','Day','3P','CM8200','Power','563994','不測試','','板子不上電','ps2005亂碼','重新啟動ps2005','重新啟動ps2005','pass',1,'S18103110','2019-07-08 09:29:43'),(90490,'2019-07-01','00:00:00','Day','NA','TG2492','WIFI','728078-2','BDFWCV','','2G值測不過 ','2G第二根針值偏小','探針清潔并重新對位','探針清潔并重新對位','PASS',1,'S19047313','2019-07-08 11:28:31'),(90491,'2019-07-01','00:00:00','Day','3H','TG2482','Power','H線','治具更換','','換線','8051程式不對應','重新燒錄8051程式','重新燒錄8051程式','OK',1,'S18159549','2019-07-08 09:29:43'),(90492,'2019-07-01','00:00:00','Day','3H','TG2482','Power','H線','治具更換','','換線','感應器型號不對','更換成接觸感應器','更換成接觸感應器','OK',1,'S17027677','2019-07-08 09:29:43'),(90493,'2019-07-01','00:00:00','Day','NA','TG2492','WIFI','728078-5','BDFW6D','','5G第二根針測量值偏大','第二根針扎偏','調整探針位置','調整探針位置','PASS',1,'S18199383','2019-07-08 11:28:31'),(90494,'2019-07-02','00:00:00','Day','3U','TG2492','WIFI','U線','BDFWOK','','探針髒污','長期使用','清理探針','清理探針','PASS',1,'S14004300','2019-07-08 09:29:43'),(90495,'2019-07-02','00:00:00','Day','NA','TG2492','WIFI','728080-4','BDFW8X','','探針髒污','長期使用','清理探針','清理探針','PASS',1,'S18115457','2019-07-08 11:28:31'),(90496,'2019-07-02','00:00:00','Day','NA','TG2482','Power','N線','BDFP27','','探針髒污','長期使用','清理探針','清理探針','PASS',1,'S17016839','2019-07-08 11:28:31'),(90498,'2019-07-08','00:00:00','Day','3H','TG2482P2','Beamforming','580581','BDFW4K','溝通','不進入測試','golden不進入測試','聯網異常','聯網異常','      測試OK',1,'S14014183','2019-07-08 15:28:04');
 
 #
 # Structure for table "modellist"
@@ -116,10 +134,10 @@ INSERT INTO `maintainhistory` VALUES (38,'2019-07-04','00:00:00','Day','3J','T25
 
 DROP TABLE IF EXISTS `modellist`;
 CREATE TABLE `modellist` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `customer` varchar(255) NOT NULL DEFAULT '' COMMENT '客戶',
-  PRIMARY KEY (`Id`),
+  `Id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `customer` varchar(255) NOT NULL default '' COMMENT '客戶',
+  PRIMARY KEY  (`Id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='機種清單';
 
@@ -135,10 +153,10 @@ INSERT INTO `modellist` VALUES (1,'TG2492','ARRIS'),(2,'TG2492P2','ARRIS'),(3,'T
 
 DROP TABLE IF EXISTS `rfid`;
 CREATE TABLE `rfid` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `rid` varchar(255) DEFAULT NULL,
-  `fid` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
+  `Id` int(11) NOT NULL auto_increment,
+  `rid` varchar(255) default NULL,
+  `fid` varchar(255) default NULL,
+  PRIMARY KEY  (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COMMENT='角色與功能對應清單';
 
 #
@@ -153,16 +171,16 @@ INSERT INTO `rfid` VALUES (1,'RID_5d1b05a615cfd','FID_5d1b077'),(2,'RID_5d1b05a6
 
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
-  `code` varchar(255) NOT NULL DEFAULT '',
-  `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`code`)
+  `code` varchar(255) NOT NULL default '',
+  `name` varchar(255) default NULL,
+  PRIMARY KEY  (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色清單';
 
 #
 # Data for table "role"
 #
 
-INSERT INTO `role` VALUES ('RID_5d1b05a615cfd','管理员'),('RID_5d1b05b5b99ad','技术员'),('RID_5d1b0603a37fd','组长'),('RID_5d1b06252d50a','课级'),('RID_5d1b070a8ffa3','部级');
+INSERT INTO `role` VALUES ('RID_5d1b05a615cfd','管理員'),('RID_5d1b05b5b99ad','技術員'),('RID_5d1b0603a37fd','組長'),('RID_5d1b06252d50a','課級'),('RID_5d1b070a8ffa3','部級');
 
 #
 # Structure for table "stationlist"
@@ -170,17 +188,17 @@ INSERT INTO `role` VALUES ('RID_5d1b05a615cfd','管理员'),('RID_5d1b05b5b99ad'
 
 DROP TABLE IF EXISTS `stationlist`;
 CREATE TABLE `stationlist` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '站位名稱',
-  PRIMARY KEY (`Id`),
+  `Id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '' COMMENT '站位名稱',
+  PRIMARY KEY  (`Id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='站位清單';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COMMENT='站位清單';
 
 #
 # Data for table "stationlist"
 #
 
-INSERT INTO `stationlist` VALUES (2,'POWER'),(3,'MBPS'),(4,'LC'),(5,'MPKI'),(6,'WIFICal'),(7,'WIFICal-2.4G'),(8,'WIFICal-5G'),(9,'ARFTS'),(10,'FTTS'),(11,'AFTSII'),(12,'FWDL'),(13,'WifiThroughput'),(14,'FinalCheck'),(17,'NVM');
+INSERT INTO `stationlist` VALUES (2,'POWER'),(3,'MBPS'),(4,'LC'),(5,'MPKI'),(6,'WIFICal'),(7,'WIFICal-2.4G'),(8,'WIFICal-5G'),(9,'ARFTS'),(10,'FTTS'),(11,'AFTSII'),(12,'FWDL'),(13,'WifiThroughput'),(14,'FinalCheck'),(17,'NVM'),(18,'Beamforming');
 
 #
 # Structure for table "urid"
@@ -188,17 +206,17 @@ INSERT INTO `stationlist` VALUES (2,'POWER'),(3,'MBPS'),(4,'LC'),(5,'MPKI'),(6,'
 
 DROP TABLE IF EXISTS `urid`;
 CREATE TABLE `urid` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` varchar(255) DEFAULT NULL,
-  `rid` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='用戶與角色對應清單';
+  `Id` int(11) NOT NULL auto_increment,
+  `uid` varchar(255) default NULL,
+  `rid` varchar(255) default NULL,
+  PRIMARY KEY  (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='用戶與角色對應清單';
 
 #
 # Data for table "urid"
 #
 
-INSERT INTO `urid` VALUES (1,'bj','RID_5d1b070a8ffa3'),(2,'jsy','RID_5d1b05b5b99ad'),(3,'kj','RID_5d1b06252d50a'),(4,'zz','RID_5d1b0603a37fd'),(10,'S09264888','RID_5d1b05a615cfd'),(11,'S09264888','RID_5d1b05b5b99ad'),(12,'S09264888','RID_5d1b0603a37fd'),(13,'S09264888','RID_5d1b06252d50a'),(14,'S09264888','RID_5d1b070a8ffa3'),(15,'admin','RID_5d1b05a615cfd');
+INSERT INTO `urid` VALUES (1,'bj','RID_5d1b070a8ffa3'),(2,'jsy','RID_5d1b05b5b99ad'),(3,'kj','RID_5d1b06252d50a'),(4,'zz','RID_5d1b0603a37fd'),(10,'S09264888','RID_5d1b05a615cfd'),(11,'S09264888','RID_5d1b05b5b99ad'),(12,'S09264888','RID_5d1b0603a37fd'),(13,'S09264888','RID_5d1b06252d50a'),(14,'S09264888','RID_5d1b070a8ffa3'),(15,'admin','RID_5d1b05a615cfd'),(16,'test','RID_5d1b05b5b99ad'),(17,'test','RID_5d1b0603a37fd'),(18,'test','RID_5d1b06252d50a'),(19,'test','RID_5d1b070a8ffa3'),(20,'LA1700392','RID_5d1b05a615cfd'),(21,'LA1700392','RID_5d1b05b5b99ad'),(22,'LA1700392','RID_5d1b0603a37fd'),(23,'LA1700392','RID_5d1b06252d50a'),(24,'LA1700392','RID_5d1b070a8ffa3');
 
 #
 # Structure for table "users"
@@ -206,21 +224,21 @@ INSERT INTO `urid` VALUES (1,'bj','RID_5d1b070a8ffa3'),(2,'jsy','RID_5d1b05b5b99
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` varchar(255) NOT NULL DEFAULT '',
-  `pwd` varchar(255) NOT NULL DEFAULT '',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `mail` varchar(255) DEFAULT NULL,
-  `lastLogin` datetime DEFAULT NULL,
-  `loginTimes` int(11) DEFAULT '0',
-  `loginAddr` varchar(255) DEFAULT NULL,
-  `enable` bit(1) DEFAULT b'1',
-  PRIMARY KEY (`id`,`uid`),
+  `id` int(11) NOT NULL auto_increment,
+  `uid` varchar(255) NOT NULL default '',
+  `pwd` varchar(255) NOT NULL default '',
+  `name` varchar(255) NOT NULL default '',
+  `mail` varchar(255) default NULL,
+  `lastLogin` datetime default NULL,
+  `loginTimes` int(11) default '0',
+  `loginAddr` varchar(255) default NULL,
+  `enable` bit(1) default b'1',
+  PRIMARY KEY  (`id`,`uid`),
   UNIQUE KEY `uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='用戶清單';
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COMMENT='用戶清單';
 
 #
 # Data for table "users"
 #
 
-INSERT INTO `users` VALUES (1,'admin','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','Administrator','Ping_yi','2019-07-03 17:46:00',22,'127.0.0.1',b'1'),(2,'S09264888','$2y$10$LaQIHs9FGQCsuJ5qZcyoa.2Fv4DXpS0U0DaRo2A9M7rMy/RMmElR2','易志平','ping_yi@pegatroncorp.com','2019-07-04 14:14:39',18,'127.0.0.1',b'1'),(3,'jsy','$2y$10$lsMn./QTasTExAHPQ9DQBO/2QCYZuXnb..idtt0y4nQ8FwbS0XNhW','技术员','','2019-07-03 13:41:25',1,'127.0.0.1',b'1'),(4,'zz','$2y$10$Zu1k4hCpVAkN7e4I.LqlguD5ld9k/bMFsGUo3DAA92JNCWIrFZBN2','组长','','2019-07-03 13:44:06',1,'127.0.0.1',b'1'),(5,'kj','$2y$10$IUpmpxsDpqDPix.yJpIM2uvCBBYU5JHHGl9U2XjWm5lYsT6pgcHt2','课级','','2019-07-03 13:43:52',1,'127.0.0.1',b'1'),(6,'bj','$2y$10$P.y2RBYb3enpVhzI9XEfzOVttypSGXXk6LZf9MWXIxIQ9XqQmyr5q','部级','','2019-07-03 13:43:59',1,'127.0.0.1',b'1'),(23,'S09264889','$2y$10$28E0O3xevojptKMI1RroZOoaEGw/a2mYwHv9P4Yy9LJO8JOEIE00a','易志平','','2019-07-03 14:59:30',1,'127.0.0.1',b'1');
+INSERT INTO `users` VALUES (1,'admin','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','Administrator','Ping_yi','2019-07-08 10:17:11',32,'172.24.253.52',b'1'),(2,'S09264888','$2y$10$LaQIHs9FGQCsuJ5qZcyoa.2Fv4DXpS0U0DaRo2A9M7rMy/RMmElR2','易志平','ping_yi@pegatroncorp.com','2019-07-08 12:09:09',36,'172.24.253.51',b'1'),(3,'jsy','$2y$10$lsMn./QTasTExAHPQ9DQBO/2QCYZuXnb..idtt0y4nQ8FwbS0XNhW','技术员','','2019-07-05 13:31:44',2,'127.0.0.1',b'1'),(4,'zz','$2y$10$Zu1k4hCpVAkN7e4I.LqlguD5ld9k/bMFsGUo3DAA92JNCWIrFZBN2','组长','','2019-07-03 13:44:06',1,'127.0.0.1',b'1'),(5,'kj','$2y$10$IUpmpxsDpqDPix.yJpIM2uvCBBYU5JHHGl9U2XjWm5lYsT6pgcHt2','课级','','2019-07-03 13:43:52',1,'127.0.0.1',b'1'),(6,'bj','$2y$10$P.y2RBYb3enpVhzI9XEfzOVttypSGXXk6LZf9MWXIxIQ9XqQmyr5q','部级','','2019-07-03 13:43:59',1,'127.0.0.1',b'1'),(25,'test','$2y$10$3ijwrDwOVquZ7bGBWvoY.uTpM3x8GX9zvVy9kEQ0ymu.0OWrI0I9i','測試賬號','','2019-07-08 11:01:02',4,'172.24.253.52',b'1'),(26,'S16018547','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','潘傳朋',NULL,'2019-07-08 10:37:23',1,'172.24.253.51',b'1'),(27,'S16018550','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','任立陽',NULL,NULL,0,NULL,b'1'),(28,'S17011607','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','劉忠強',NULL,NULL,0,NULL,b'1'),(29,'S17013626','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','張曉斌',NULL,NULL,0,NULL,b'1'),(30,'S17013681','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','程海強',NULL,NULL,0,NULL,b'1'),(31,'S17009558','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','王建亮',NULL,NULL,0,NULL,b'1'),(32,'S17017183','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','黃海波',NULL,NULL,0,NULL,b'1'),(33,'S18040921','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','翟興龍',NULL,NULL,0,NULL,b'1'),(34,'S18059828','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','劉照祥',NULL,NULL,0,NULL,b'1'),(35,'S18029952','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','張淼淼',NULL,NULL,0,NULL,b'1'),(36,'S18184245','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','魏入昌',NULL,NULL,0,NULL,b'1'),(37,'S17043463','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','王凱',NULL,NULL,0,NULL,b'1'),(38,'S15061394','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','者媛',NULL,NULL,0,NULL,b'1'),(39,'S19003686','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','賴曉林',NULL,NULL,0,NULL,b'1'),(40,'S14014183','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','趙萬博',NULL,'2019-07-08 11:28:12',1,'172.22.79.11',b'1'),(41,'S14011729','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','石義文',NULL,NULL,0,NULL,b'1'),(42,'S16040916','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','李沖',NULL,NULL,0,NULL,b'1'),(43,'S17009255','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','唐偉',NULL,NULL,0,NULL,b'1'),(44,'S17027936','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','張翌',NULL,NULL,0,NULL,b'1'),(45,'S17006184','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','李嘉奇',NULL,NULL,0,NULL,b'1'),(46,'S17052571','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','閆其琛',NULL,NULL,0,NULL,b'1'),(47,'S17028016','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','趙志霞',NULL,NULL,0,NULL,b'1'),(48,'S18004140','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','苗騰飛',NULL,NULL,0,NULL,b'1'),(49,'S17034804','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','劉佳麗',NULL,NULL,0,NULL,b'1'),(50,'S18041167','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','魯夢賢',NULL,NULL,0,NULL,b'1'),(51,'S18027783','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','賈林',NULL,NULL,0,NULL,b'1'),(52,'S18122958','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','徐毫',NULL,NULL,0,NULL,b'1'),(53,'S19014831','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','肖海潮',NULL,NULL,0,NULL,b'1'),(54,'S19048207','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','程旭東',NULL,NULL,0,NULL,b'1'),(55,'S19074890','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','陶飛龍',NULL,NULL,0,NULL,b'1'),(56,'S19078103','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','沈鈺平',NULL,NULL,0,NULL,b'1'),(57,'S13017884','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','丁凱',NULL,'2019-07-08 11:31:07',1,'172.22.79.57',b'1'),(58,'S14004300','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','單文騰',NULL,NULL,0,NULL,b'1'),(59,'S16031429','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','趙新科',NULL,NULL,0,NULL,b'1'),(60,'S16019149','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','賀成國',NULL,NULL,0,NULL,b'1'),(61,'S17027677','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','李顯',NULL,NULL,0,NULL,b'1'),(62,'S17016839','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','方帥',NULL,NULL,0,NULL,b'1'),(63,'S17024594','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','吳江勇',NULL,NULL,0,NULL,b'1'),(64,'S18035524','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','王志義',NULL,NULL,0,NULL,b'1'),(65,'S18029719','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','張新',NULL,NULL,0,NULL,b'1'),(66,'S18038751','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','吳作優',NULL,NULL,0,NULL,b'1'),(67,'S18052387','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','丁勇',NULL,NULL,0,NULL,b'1'),(68,'S17034715','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','易姝靖',NULL,NULL,0,NULL,b'1'),(69,'S18103110','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','聶玉平',NULL,NULL,0,NULL,b'1'),(70,'S18115457','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','狄冬',NULL,NULL,0,NULL,b'1'),(71,'S18159549','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','羅磊',NULL,NULL,0,NULL,b'1'),(72,'S18199383','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','李駿',NULL,NULL,0,NULL,b'1'),(73,'S19047313','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','劉啟宗',NULL,NULL,0,NULL,b'1'),(74,'S19074771','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','黨海程',NULL,NULL,0,NULL,b'1'),(75,'S16038773','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','段金峰',NULL,NULL,0,NULL,b'1'),(76,'LA1700392','$2y$10$gmQGH9lLHIoVXxVtWv4UTewrl0oh0.TrhjjdqYv4KlKd6UQ1gOQiu','呂國禎',NULL,NULL,0,NULL,b'1');

@@ -61,13 +61,13 @@
             <li>查詢
                 <ul>
                     <li><a href="?act=maintain/search">查詢資料</a></li>
-                    <li><a>項目2</a></li>
+<!--                    <li><a>項目2</a></li>-->
                 </ul>
             </li>
             <li>報表
                 <ul>
-                    <li><a>項目1</a></li>
-                    <li><a>項目2</a></li>
+<!--                    <li><a>項目1</a></li>-->
+<!--                    <li><a>項目2</a></li>-->
                 </ul>
             </li>
             <li>後台
@@ -80,8 +80,8 @@
             </li>
             <li>其他
                 <ul>
-                    <li><a>項目1</a></li>
-                    <li><a>項目2</a></li>
+<!--                    <li><a>項目1</a></li>-->
+<!--                    <li><a>項目2</a></li>-->
                 </ul>
             </li>
         </ul>

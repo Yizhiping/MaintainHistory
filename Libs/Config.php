@@ -19,8 +19,8 @@ $cssName = $isMobile ? "MainPage_Mobile.css" : "MainPage.css";
 
 /*********************数据库连接************************/
 $db_host = "127.0.0.1";
-$db_uid  = "root";
-$db_pwd  = "root";
+$db_uid  = "maintainhistory";
+$db_pwd  = "#*c123456";
 $db_name = "MaintainHistory";
 
 /**********************一些参数**************************/

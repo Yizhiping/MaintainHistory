@@ -118,9 +118,9 @@ switch ($method)
             if ($state != 'All') $filter += array('state' => $state);
             if (!empty($line)) $filter += array('line' => $line);
 
-            if (!$user->authByRole('管理員', false)) $sqlSub = " and owner='{$user->uid}'";
+            if (!$user->authByRole('管理員', false)) $sqlSub = " and owner='{$user->uid}'";        //作owner過濾, 只能查看自己填寫的, 管理員不限制
             $searchResult = $maintain->search(array('Id', 'date', 'line', 'station', 'errCode', 'errClass','errDesc', 'rootCause', 'state'),
-                $filter, "date between '{$startDate}' and '{$stopDate}'" . $sqlSub);
+                $filter, "date between '{$startDate}' and '{$stopDate}'" . $sqlSub . " order by date");
         } else {
             __showMsg("搜索的日期錯誤, 開始日期必須小雨結束日期, 且最多搜索的天數不大於30天.");
         }
@@ -131,14 +131,15 @@ switch ($method)
         $stopDate = __get('stopDate');
         $filter = array();
         $sqlSub = null;
-        $allCount  = array();
+        $searchResult = null;
 
         if((diffBetweenTwoDays($startDate,$stopDate) !== false) && (diffBetweenTwoDays($startDate,$stopDate) <= 91)) {
             $tmpArr = array();
+            $allCount  = array();
 
             foreach (array('line','station','errCode','model') as $key)
             {
-                if($$key != 'All' && !empty($$key)) array_push($tmpArr,"{$key}='{$$key}'");
+                if($$key != 'All') array_push($tmpArr,"{$key}='{$$key}'");
             }
 
             //處理篩選條件
@@ -149,7 +150,7 @@ switch ($method)
             $searchStationList = $conn->getLine("select station from maintainhistory where {$sqlSub} date between '{$startDate}' and '{$stopDate}' group by station order by station");
 
 
-            if(!empty($searchLineList) && !empty($searchStationList)) {
+            if(!empty($searchLineList)) {
                 foreach ($searchLineList as $searchLine) {
                     $lineCount = array();
                     foreach ($searchStationList as $searchStation) {
@@ -159,7 +160,7 @@ switch ($method)
                 }
             }
         } else {
-            __showMsg("搜索的日期錯誤, 開始日期必須小雨結束日期, 且最多搜索的天數不大於30天.");
+            __showMsg("搜索的日期錯誤, 開始日期必須小雨結束日期, 且最多搜索的天數不大於90天.");
         }
         break;
 }
