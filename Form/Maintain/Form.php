@@ -1,6 +1,13 @@
+<?php
+//todo: 需要篩選用戶獲取到的資料, 根據用戶的Team別進行篩選
+$lineList = $conn->getLine("select line from linelist order by line");
+$stationList = $conn->getLine("select name from stationlist order by name");
+$modelList = $conn->getLine("select name from modellist order by name");
+$teamList = $conn->getLine("select name from teamlist order by name");
+
+?>
+
 <style>
-
-
     #divMaintainAdd select,#divMaintainAdd input[type='text'],#divMaintainAdd input[type='date']{
         width: 150px;
         font-size: 0.8em;
@@ -39,38 +46,44 @@
             <select id="shift" name="shift">
                 <option value="Day">白班</option>
                 <option value="Night"
-                <?php
+                <?php       //班別, 如果變量shift有值, 則根據變量內容顯示, 如果沒有, 則根據當前的時間, 晚上20點以後, 早上8點以前是夜班.
                 if(empty($shift)) {
                     if(((int)date('H')) >= 20 &&((int)date('H')) < 8) echo " selected = selected";
                 } else if($shift=='Night') {
                     echo " selected = selected";
                 }
-
                     ?>
                 >夜班</option>
             </select>
         </td>
-        <td colspan="5"></td>
+        <td class="maintainTitle">團隊:</td>
+        <td>
+            <input type="text" id="team" name="team" value="<?php echo $team ?>" class="selInput">
+            <ul id="selTeam" name="selTeam" class="itemList">
+                <?php __createSelectItem($teamList) ?>
+            </ul>
+        </td>
+        <td colspan="3"></td>
     </tr>
     <tr>
         <td class="maintainTitle">線體:</td>
         <td title="發生異常時的所在綫體"><input type="text" id="line" name="line" value="<?php echo $line ?>" class="selInput">
             <ul id="selLine" name="selLine" class="itemList">
-                <?php __createSelectItem($conn->getLine("select line from linelist order by line"))   ?>
+                <?php __createSelectItem($lineList) ?>
             </ul>
         </td>
          <td class="maintainTitle">機種:</td>
         <td title="發生異常的機種">
             <input type="text" id="model" name="model" value="<?php echo $model ?>" class="selInput">
             <ul id="selModel" name="selModel" class="itemList">
-                <?php __createSelectItem($conn->getLine("select name from modellist order by name"))   ?>
+                <?php __createSelectItem($modelList) ?>
             </ul>
         </td>
         <td class="maintainTitle">站位:</td>
         <td title="發生異常的站位">
             <input type="text" id="station" name="station" value="<?php echo $station ?>" class="selInput">
             <ul id="selStation" name="selStation" class="itemList">
-                <?php __createSelectItem($conn->getLine("select name from stationlist order by name"))   ?>
+                <?php __createSelectItem($stationList)   ?>
             </ul>
         </td>
         <td class="maintainTitle">Device:</td>
@@ -122,7 +135,7 @@
         <td colspan=8" title="描述執行對策后, 異常是否有所改善."><input type="text" id="result" name="result" value="<?php echo $result ?>" style="width: 100%;"></td>
     </tr>
     <tr>
-        <td>狀態:</td>
+        <td class="maintainTitle">狀態:</td>
         <td>
             <select name="state" id="state">
                 <option value="0">未結案</option>
@@ -130,6 +143,9 @@
             </select>
         </td>
         <td class="maintainTitle">處理人:</td>
-        <td colspan="8" title="該異常的責任人"><input readonly="readonly" type="text" id="owner" name="owner" value="<?php echo $owner ?>" style="width: 100%;"></td>
+        <td title="該異常的責任人"><input readonly="readonly" type="text" id="owner" name="owner" value="<?php echo $owner ?>" ></td>
+        <td title="該異常的責任人"><input readonly="readonly" type="text" id="name" name="name" value="<?php echo $name ?>" ></td>
+        <td colspan="6"></td>
+
     </tr>
 </table>

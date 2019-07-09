@@ -11,19 +11,11 @@
 include("Libs/MaintainHistory.php");
 $maintain = new MaintainHistory();
 
-//********************************函數****************************************
-//function __createSelectItem($itemList)
-//{
-//    foreach ($itemList as $value)
-//    {
-//        echo "<li class='listOption'>{$value}</li>";
-//    }
-//}
-
 //********************************獲取表單變量*******************************
 $id = __get('id');
 $date = __get('date');
 $shift = __get('shift');
+$team = __get('team');
 $line = __get('line');
 $model = __get('model');
 $station = __get('station');
@@ -42,10 +34,12 @@ switch ($method)
 {
     case 'add':
         $owner = $user->uid;
+        $name  = $user->name;
         if(!empty(__get('btnMaintainAdd'))) {
             $maintainInfo = $maintain->sampleHistory;
             $maintainInfo['date'] = $date;
             $maintainInfo['shift'] = $shift;
+            $maintainInfo['team'] = $team;
             $maintainInfo['line'] = $line;
             $maintainInfo['model'] = $model;
             $maintainInfo['station'] = $station;
@@ -61,7 +55,7 @@ switch ($method)
             $maintainInfo['owner'] = $owner;
             if ($maintain->add($maintainInfo)) {
                 __showMsg("添加成功");
-                $date = $shift = $line = $model = $station = $device = $errCode = $errDesc = $rootCause = $causeAnalysis = $action = $result = $state = $owner = null;
+                $team = $date = $shift = $line = $model = $station = $device = $errCode = $errDesc = $rootCause = $causeAnalysis = $action = $result = $state = $owner = null;
 
             } else {
                 __showMsg("添加失敗");
@@ -74,7 +68,7 @@ switch ($method)
             __showMsg("無效的請求數據");
         } else {
             //取得當前id的數據
-            $fields = array('id','date','shift','line','model','station','device','errCode','errClass','errDesc','rootCause','causeAnalysis','zAction','result','state','owner');
+            $fields = array('id','date','shift','team','line','model','station','device','errCode','errClass','errDesc','rootCause','causeAnalysis','zAction','result','state','owner');
             $filter = array('id'=>$id);
             $maintainInfo = $maintain->search($fields, $filter);
             $maintainInfo = $maintainInfo[0];
@@ -82,6 +76,7 @@ switch ($method)
             if(empty(__get('btnMaintainUpdate'))) {     //如果不是更新,賦值顯示的變量.
                 $date = $maintainInfo['date'];
                 $shift = $maintainInfo['shift'];
+                $team = $maintainInfo['team'];
                 $line = $maintainInfo['line'];
                 $model = $maintainInfo['model'];
                 $station = $maintainInfo['station'];
@@ -95,6 +90,7 @@ switch ($method)
                 $result = $maintainInfo['result'];
                 $state = $maintainInfo['state'];
                 $owner = $maintainInfo['owner'];
+                $name = $user->getNameByUid($owner);
             } else {
                 $updateData = array('errDesc'=>$errDesc,'rootCause'=>$rootCause,'causeAnalysis'=>$causeAnalysis,'zAction'=>$action,'result'=>$result,'state'=>$state);
                 if($maintain->update($id,$updateData))
@@ -137,6 +133,7 @@ switch ($method)
             $tmpArr = array();
             $allCount  = array();
 
+            //獲取篩選條件
             foreach (array('line','station','errCode','model') as $key)
             {
                 if($$key != 'All') array_push($tmpArr,"{$key}='{$$key}'");

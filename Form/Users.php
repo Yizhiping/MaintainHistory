@@ -46,19 +46,13 @@ if(!empty(__get('btnUserDel')))
 
 
 //獲取所有用戶列表, 打印用戶下拉列表
-$opstr = "";
-foreach ($conn->getAllRow("select uid,name from users") as $u)
-{
-    if($uid == $u['uid'])
-    {
-        $opstr .= "<option selected='selected' value='{$u['uid']}'>{$u['name']}</option>";
-    } else {
-        $opstr .= "<option value='{$u['uid']}'>{$u['name']}</option>";
-    }
-}
+$allUsers = $conn->getAllRow("select uid,name from users");
 
 //獲取所有角色信息
-$roles = $conn->getAllRow("select code,name from role");
+$allRoles = $conn->getAllRow("select code,name from role");
+
+//獲取所有團隊
+$allTeams = $conn->getLine("select name from teamlist");
 
 //更新用戶角色
 if(!empty(__get('btnUpdateRole')))
@@ -67,7 +61,7 @@ if(!empty(__get('btnUpdateRole')))
     $user->delByUserFromURID($uid);
 
     //插入角色信息
-    foreach ($roles as $r)
+    foreach ($allRoles as $r)
     {
         if(!empty(__get($r['code'])))
         {
@@ -77,21 +71,56 @@ if(!empty(__get('btnUpdateRole')))
     __showMsg("角色信息更新成功.");
 }
 
-//獲取用戶角色URID, 以checkbox呈現當前用戶角色信息
-$roleChkBoxstr = "";
-$urids = $conn->getLine("select rid from urid where uid ='{$uid}'");    //獲取用戶角色信息
-if(!is_array($urids)) $urids = array();                                        //如果沒有賦值空
-foreach ( $roles as $r)
+//獲取用戶角色ID
+$roleForUid = $user->getRoleByUid($uid,'code');
+if(!$roleForUid) $roleForUid = array();                 //無角色的時候賦值空數組
+
+//更新用戶團隊
+if(!empty(__get('btnUpdateTeam')))
 {
-    if(in_array($r['code'],$urids))
+    $tmpArr = array();
+    foreach ($allTeams as $item)
     {
-        $roleChkBoxstr .= "<div><label for='{$r['code']}'>{$r['name']}</label><input type='checkbox' name='{$r['code']}' id='{$r['code']}' value='{$r['name']}' checked='checked'/></div>";
-    } else {
-        $roleChkBoxstr .= "<div><label for='{$r['code']}'>{$r['name']}</label><input type='checkbox' name='{$r['code']}' id='{$r['code']}' value='{$r['name']}'/></div>";
+        if(!empty(__get($item))){
+            array_push($tmpArr, __get($item));
+        }
+    }
+    if($user->updateUserTeam($uid, $tmpArr))
+    {
+        __showMsg("用戶團隊更新成功");
     }
 }
 
+//獲取用戶團隊
+$teamForUid = $user->getTeamByUid($uid);
+if(empty($teamForUid)) $teamForUid = array();
+
 ?>
+<style>
+
+    .InfoTitle {
+        background-color: #222;
+        color: #fff;
+        text-align: center;
+    }
+
+    .InfoTitle td {
+        width: 200px;
+    }
+
+    #userRole td:first-child,#userTeam td:first-child{
+        text-align: right;
+    }
+    #userRole td:nth-child(2),#userTeam td:nth-child(2){
+        text-align: left;
+    }
+
+    #userRole td,#userTeam td{
+        width: 100px;
+        text-align: center;
+        border-bottom: 1px solid #222;
+    }
+</style>
 <script type="text/javascript">
     $(document).ready(function (e) {
         $('#btnUserAdd').click(function (e) {
@@ -114,8 +143,8 @@ foreach ( $roles as $r)
       <input type="text" name="password" id="password" style="width: 100px;" />
       <label for="mail">郵件</label>
       <input type="text" name="mail" id="mail" style="width: 100px;" />
-<!--      <label for="description">說明</label>-->
-<!--      <input type="text" name="description" id="description" style="width: 100px;" />-->
+      <label for="team">團隊</label>
+      <input type="text" name="team" id="team" style="width: 100px;" class=""/>
       <input type="submit" name="btnUserAdd" id="btnUserAdd" value="創建用戶" />
     </form>
 </div>
@@ -123,18 +152,62 @@ foreach ( $roles as $r)
 <div id="divUserManagement" >
   <form action="?act=users&amp;subact=usermanagement" method="post" enctype="multipart/form-data" name="formUserManagement" id="formUserManagement">
       <div class="divSearch">
-    <label>選擇用戶
-      <select name="userID" id="userID">
-          <option value="">選擇用戶</option>
-        <?php echo $opstr ?>
-      </select>
-    </label>
-      <input type="submit" name="btnUserDel" id="btnUserDel" value="刪除用戶" />
-    <input type="submit" name="btnGetRole" id="btnGetRole" value="獲取用戶角色" />
-      <input type="submit" name="btnUpdateRole" id="btnUpdateRole" value="更新用戶角色" />
+        <label>選擇用戶</label>
+          <select name="userID" id="userID">
+              <option value="">選擇用戶</option>
+                <?php
+                foreach ($allUsers as $item)
+                {
+                    if($item['uid'] == $uid)
+                    {
+                        echo "<option value='{$item['uid']}' selected='selected'>{$item['name']}</option>";
+                    } else {
+                        echo "<option value='{$item['uid']}'>{$item['name']}</option>";
+                    }
+                }
+                ?>
+          </select>
+
+        <input type="submit" name="btnUserDel" id="btnUserDel" value="刪除用戶" />
+        <input type="submit" name="btnGetRole" id="btnGetRole" value="獲取用戶角色" />
+        <input type="submit" name="btnUpdateRole" id="btnUpdateRole" value="更新用戶角色" />
+        <input type="submit" name="btnGetRole" id="btnGetRole" value="獲取用戶團隊" />
+        <input type="submit" name="btnUpdateTeam" id="btnUpdateTeam" value="更新用戶團隊" />
       </div>
-      <div><?php echo $roleChkBoxstr ?></div>
-    
+      <div id="showUserInfo">
+          <table>
+              <tr class="InfoTitle">
+                  <td>角色</td>
+                  <td>團隊</td>
+              </tr>
+              <tr>
+                  <td valign="top">
+                      <table id="userRole">
+                          <?php
+                            foreach ($allRoles as $item)
+                            {
+                                $isChecked = null;
+                                if(in_array($item['code'],$roleForUid)) $isChecked = "checked='checked'";
+                                echo "<tr><td>{$item['name']}</td><td><input type='checkbox' name='{$item['code']}' value='{$item['code']}' {$isChecked} /></td></tr>";
+                            }
+                          ?>
+                      </table>
+                  </td>
+                  <td valign="top">
+                      <table id="userTeam">
+                          <?php
+                            foreach ($allTeams as $item)
+                            {
+                                $isChecked = null;
+                                if(in_array($item,$teamForUid)) $isChecked = "checked='checked'";
+                                echo "<tr><td>{$item}</td><td><input type='checkbox' name='{$item}' value='{$item}' {$isChecked} /></td></tr>";
+                            }
+                          ?>
+                      </table>
+                  </td>
+              </tr>
+          </table>
+      </div>
   </form>
 </div>
 

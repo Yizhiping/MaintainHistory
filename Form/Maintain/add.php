@@ -84,6 +84,6 @@
 <?php
 include("Form/Maintain/Form.php");
 ?>
-        <div><input type="reset" value="清空重填" class="button"><input type="submit" value="添加記錄" name="btnMaintainAdd" id="btnMaintainAdd"></div>
+        <div style="float: right"><input type="reset" value="清空重填" class="button"><input type="submit" value="添加記錄" name="btnMaintainAdd" id="btnMaintainAdd"></div>
     </form>
 </div>

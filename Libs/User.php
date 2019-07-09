@@ -17,6 +17,7 @@ class User
     public $loginTimes;         //登录次数
     public $role;               //用戶角色
     public $fun;                //用戶權限
+    public $team;               //用戶所在團隊
     public $uconn;
     public $isLogined = false;
 
@@ -47,6 +48,7 @@ class User
                 $this->loginTimes= $_SESSION['loginTimes'];
                 $this->role = $_SESSION['role'];
                 $this->fun  = $_SESSION['fun'];
+                $this->team = $_SESSION['team'];
             }
         }
     }
@@ -73,8 +75,9 @@ class User
                 $this->lastLogin = $_SESSION['lastLogin'] = $userInfo['lastLogin'];   //lastLogin
                 $this->loginTimes = $_SESSION['loginTimes'] = $userInfo['loginTimes']; //LoginTimes
                 $this->enable = $_SESSION['enable'] = $userInfo['enable'];         //enable
-                $this->role = $_SESSION['role'] = $this->uconn->getLine("select name from role where code in(select rid from urid where uid='{$uid}' )");
-                $this->fun  = $_SESSION['fun'] = $this->uconn->getLine("select name from fun  where code in(select fid from rfid where rid in (select rid from urid where uid='{$uid}'))");
+                $this->role = $_SESSION['role'] = $this->getRoleByUid($uid);        //roles
+                $this->fun  = $_SESSION['fun'] = $this->getFunByUid($uid);          //funs
+                $this->team = $_SESSION['team'] = $this->getTeamByUid($uid);        //teams
 
                 //更新登录信息
                 $this->uconn->query("update users set loginAddr='{$this->loginAddr}', lastLogin=now(), LoginTimes=LoginTimes+1 where Uid='{$this->uid}'");
@@ -284,6 +287,68 @@ class User
     public function addByUserToURID($uid, $rid)
     {
         return $this->uconn->query("insert into urid (uid, rid) value ('{$uid}','{$rid}')");
+    }
+
+    /**
+     * 更新用戶的團隊, 先刪除所有, 再添加. 如果要添加的為空, 則只刪除.
+     * @param $uid
+     * @param $teams
+     * @return bool|mysqli_result
+     */
+    public function updateUserTeam($uid, $teams)
+    {
+        if(!$this->uconn->query("delete from utid where uid='{$uid}'")) return false;   //刪除出錯, 返回false
+        if(!is_array($teams) || count($teams) < 1) return true;        //不是數組或空數據, 直接返回false
+        $tmpArr = array();
+        foreach ($teams as $item)
+        {
+            array_push( $tmpArr, "('{$uid}','{$item}')");
+        }
+        return $this->uconn->query("insert into utid (uid, tid) values " . implode(',',$tmpArr));
+
+    }
+
+    /**
+     * 獲取uid對應的用戶信息
+     * @param $uid
+     * @param $field
+     * @return bool
+     */
+    public function getNameByUid($uid, $field)
+    {
+        return $this->uconn->getItemByItemName("select {$field} from users where uid='{$uid}'");
+    }
+
+    /**
+     * 獲取指定uid的角色信息
+     * @param $uid
+     * @param $field
+     * @return array|bool
+     */
+    public function getRoleByUid($uid, $field)
+    {
+        return $this->uconn->getLine("select {$field} from role where code in (select rid from urid where uid='{$uid}')");
+    }
+
+    /**
+     * 獲取指定uid的功能信息
+     * @param $uid
+     * @param $field
+     * @return array|bool
+     */
+    public function getFunByUid($uid, $field)
+    {
+        return $this->uconn->getLine("select {$field} from fun where code in (select fid from rfid where rid in (select uid from urid where uid='{$uid}'))");
+    }
+
+    /**
+     * 獲取指定uid的團隊
+     * @param $uid
+     * @return array|bool
+     */
+    public function getTeamByUid($uid)
+    {
+        return $this->uconn->getLine("select tid from utid where uid='{$uid}'");
     }
 
     /**

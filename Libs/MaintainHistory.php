@@ -14,6 +14,7 @@ class MaintainHistory
         'time'=>null,           //時間
         'date'=>null,           //日期
         'shift'=>null,          //班別
+        'team'=>null,           //團隊
         'line'=>null,           //線體
         'model'=>null,          //機種
         'station'=>null,        //站位
@@ -42,7 +43,7 @@ class MaintainHistory
     public function add($maintainHistory)
     {
         $maintainHistory = array_slice($maintainHistory,2);
-        $sql = "insert into maintainhistory (date,shift, line, model, station, device, errCode, errClass,errDesc, rootCause, CauseAnalysis, zAction, result, state,owner)
+        $sql = "insert into maintainhistory (date,shift,team, line, model, station, device, errCode, errClass,errDesc, rootCause, CauseAnalysis, zAction, result, state,owner)
               value ('" . implode("','",$maintainHistory) ."')";
         return $this->mconn->query($sql);
     }

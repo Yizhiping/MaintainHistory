@@ -19,6 +19,9 @@
         $('#errCode').attr('disabled',true);
         $('#owner').attr('disabled',true);
         $('#errClass').attr('disabled',true);
+        $('#name').attr('disabled',true);
+        $('#team').attr('disabled',true);
+
 
         //狀態為結案, 全部禁用.
         if($('#state').val()=='1') {
