@@ -1,0 +1,41 @@
+<!--饼图的示例-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="Script/excanvas.js"></script>
+    <script type="text/javascript" src="Script/loongchart.core.min.js"></script>
+    <script type="text/javascript" src="Script/loongchart.pie.min.js"></script>
+    <script type="text/javascript" src="Script/loongchart.bar.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            var data = [
+                { text: "Firefox", value: 45, },
+                { text: "IE", value: 26.8,  },
+                { text: "Chrome", value: 12.8,},
+                { text: "Safari", value: 8.5 },
+                { text: "Opera", value: 6.2 },
+                { text: "Others", value: 0.7 }
+            ];
+            var options = {
+                title: { content: 'Top 5 Browsers from 1 to 29 Feb 2012' }
+                //subTitle: { content: 'Let see which brower shares the most.' }
+            };
+
+            //方式1
+            //window.lchart = new LChart.Pie('divCanvas', 'CN');
+            //lchart.SetSkin('BlackAndWhite');
+            //lchart.SetOptions(options);
+            //lchart.Draw(data);
+
+            //方式2
+            (new LChart.Bar('myChart', 'CN')).SetSkin('BlackAndWhite').Draw(data, options);
+        };
+    </script>
+</head>
+<body>
+
+<div style="width: 500px; height: 400px;" id="myChart"></div>
+</body>
+</html>

@@ -61,7 +61,7 @@ switch ($method)
                 __showMsg("添加失敗");
             }
         }
-        break;          //增加
+        break;           //增加
     case 'update':
         $id = is_null($dat) ? $id : $dat;        //url的第三個參數為id
         if (!is_numeric($id)) {                    //id必須為數字, 負責判斷為無效
@@ -90,7 +90,7 @@ switch ($method)
                 $result = $maintainInfo['result'];
                 $state = $maintainInfo['state'];
                 $owner = $maintainInfo['owner'];
-                $name = $user->getNameByUid($owner);
+                $name = $user->getNameByUid($owner,'name');
             } else {
                 $updateData = array('errDesc'=>$errDesc,'rootCause'=>$rootCause,'causeAnalysis'=>$causeAnalysis,'zAction'=>$action,'result'=>$result,'state'=>$state);
                 if($maintain->update($id,$updateData))
@@ -101,7 +101,38 @@ switch ($method)
                 }
             }
         }
-        break;       //更新
+        break;        //更新
+    case 'view':
+        $id = is_null($dat) ? $id : $dat;        //url的第三個參數為id
+        if (!is_numeric($id)) {                    //id必須為數字, 負責判斷為無效
+            __showMsg("無效的請求數據");
+        } else {
+            //取得當前id的數據
+            $fields = array('id','date','shift','team','line','model','station','device','errCode','errClass','errDesc','rootCause','causeAnalysis','zAction','result','state','owner');
+            $filter = array('id'=>$id);
+            $maintainInfo = $maintain->search($fields, $filter);
+            $maintainInfo = $maintainInfo[0];
+
+            $date = $maintainInfo['date'];
+            $shift = $maintainInfo['shift'];
+            $team = $maintainInfo['team'];
+            $line = $maintainInfo['line'];
+            $model = $maintainInfo['model'];
+            $station = $maintainInfo['station'];
+            $device = $maintainInfo['device'];
+            $errCode = $maintainInfo['errCode'];
+            $errClass = $maintainInfo['errClass'];
+            $errDesc = $maintainInfo['errDesc'];
+            $rootCause = $maintainInfo['rootCause'];
+            $causeAnalysis = $maintainInfo['causeAnalysis'];
+            $action = $maintainInfo['zAction'];
+            $result = $maintainInfo['result'];
+            $state = $maintainInfo['state'];
+            $owner = $maintainInfo['owner'];
+            $name = $user->getNameByUid($owner,'name');
+
+        }
+        break;          //更新
     case 'personal':
         $startDate = __get('startDate');
         $stopDate = __get('stopDate');
@@ -122,7 +153,75 @@ switch ($method)
         }
 
         break;      //個人專區
+    case 'list':          //查找
+        $startDate = __get('startDate');
+        $stopDate = __get('stopDate');
+        $filter = array();
+        $sqlSub = null;
+        $searchResult = null;
+
+        if((diffBetweenTwoDays($startDate,$stopDate) !== false) && (diffBetweenTwoDays($startDate,$stopDate) <= 91)) {
+            $tmpArr = array();
+            $allCount  = array();
+
+
+            //獲取篩選條件
+            foreach (array('line','station','errCode','model') as $key)
+            {
+                if($$key != 'All') array_push($tmpArr,"{$key}='{$$key}'");
+            }
+
+            //處理篩選條件
+            $sqlSub = implode(' and ', $tmpArr);
+            $sqlSub = empty($sqlSub) ? null : " and " . $sqlSub ;
+
+            $searchResult = $conn->getAllRow("select id,date,team,line,station,errCode,errClass,errDesc,rootCause,state from maintainhistory where date between '{$startDate}' and '{$stopDate}' {$sqlSub}");
+
+        } else {
+            __showMsg("搜索的日期錯誤, 開始日期必須小雨結束日期, 且最多搜索的天數不大於90天.");
+        }
+        break;          //查找
+    case 'chart':             //图表
+        $startDate = __get('startDate');
+        $stopDate = __get('stopDate');
+        $filterBy  = __get('filterBy');
+        $sqlSub = null;
+        $searchResult = null;
+
+        if((diffBetweenTwoDays($startDate,$stopDate) !== false) && (diffBetweenTwoDays($startDate,$stopDate) <= 91)) {
+            $tmpArr = array();
+            $allCount  = array();
+
+            //獲取篩選條件
+            foreach (array('line','station','errCode','model') as $key)
+            {
+                if($$key != 'All') array_push($tmpArr,"{$key}='{$$key}'");
+            }
+
+            //處理篩選條件
+            $sqlSub = implode(' and ', $tmpArr);
+            $sqlSub = empty($sqlSub) ? null : " and " . $sqlSub ;
+
+            //統計前9大的數據
+            $sql = "select {$filterBy} as name,count({$filterBy}) as count from maintainhistory  where date between '{$startDate}' and '{$stopDate}' {$sqlSub} group by {$filterBy} order by count({$filterBy}) desc";
+            $result = $conn->getAllRow($sql);
+
+            //取前9大的數據
+            $top9 = array_slice($result,0,9);
+            //前9大的名字
+            $top9Name = array_column($top9,'name');
+
+            $other = $conn->getItemByItemName("select count(id) as count from maintainhistory where date between '{$startDate}' and '{$stopDate}' {$sqlSub} and {$filterBy} not in ('" .implode("','",$top9Name) ."')");
+            $allCount = $top9 + array('name'=>'other', 'count'=>$other);
+            //todo: 計算不在9大不良, 將兩個合併
+
+        } else {
+            __showMsg("搜索的日期錯誤, 開始日期必須小雨結束日期, 且最多搜索的天數不大於90天.");
+        }
+        break;          //图表
+
     case 'search':          //查找
+        /*http://127.0.0.1/maintainhistory/Index.php?act=maintain/showChart/2019-07-03/2019-07-10/3H/Beamforming */
         $startDate = __get('startDate');
         $stopDate = __get('stopDate');
         $filter = array();
@@ -159,7 +258,7 @@ switch ($method)
         } else {
             __showMsg("搜索的日期錯誤, 開始日期必須小雨結束日期, 且最多搜索的天數不大於90天.");
         }
-        break;
+        break;          //查找
 }
 
 $loadFile = file_exists("Form/Maintain/{$method}.php") ? "Form/Maintain/{$method}.php" : "Form/404.php";

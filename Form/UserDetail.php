@@ -72,6 +72,10 @@ if($method=='changePassword') {
                     <td>權限:</td>
                     <td><?php echo empty($user->fun) ? null : implode(',', $user->fun) ?></td>
                 </tr>
+                <tr>
+                    <td>團隊:</td>
+                    <td><?php echo empty($user->team) ? null : implode(',', $user->team) ?></td>
+                </tr>
               <tr>
                 <td>最後登錄時間:</td>
                 <td><?php echo $user->lastLogin ?></td>

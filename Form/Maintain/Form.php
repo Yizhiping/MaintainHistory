@@ -1,9 +1,11 @@
 <?php
-//todo: 需要篩選用戶獲取到的資料, 根據用戶的Team別進行篩選
-$lineList = $conn->getLine("select line from linelist order by line");
-$stationList = $conn->getLine("select name from stationlist order by name");
-$modelList = $conn->getLine("select name from modellist order by name");
-$teamList = $conn->getLine("select name from teamlist order by name");
+//管理員可以看到所有的, 不過濾
+$teamFilter = ($user->authByRole('管理員',false)) ? "where 1=1" : "where team in ('" . implode("','",$user->team) . "')";
+
+$lineList = $conn->getLine("select line from linelist {$teamFilter} order by line");
+$stationList = $conn->getLine("select name from stationlist {$teamFilter} order by name");
+$modelList = $conn->getLine("select name from modellist {$teamFilter} order by name");
+$teamList = $user->team;
 
 ?>
 

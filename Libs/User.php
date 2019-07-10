@@ -39,16 +39,16 @@ class User
         if(isset($_SESSION['isLogined']))
         {
             if($_SESSION["isLogined"] == true) {
-                $this->uid = $_SESSION["uid"];
-                $this->name = $_SESSION["name"];
-                $this->mail = $_SESSION["mail"];
+                $this->uid = $_SESSION["u_uid"];
+                $this->name = $_SESSION["u_name"];
+                $this->mail = $_SESSION["u_mail"];
                 $this->isLogined = true;
                 $this->lastLogin = $_SESSION['lastLogin'];
                 $this->loginAddr = $_SESSION['loginAddr'];
                 $this->loginTimes= $_SESSION['loginTimes'];
-                $this->role = $_SESSION['role'];
-                $this->fun  = $_SESSION['fun'];
-                $this->team = $_SESSION['team'];
+                $this->role = $_SESSION['u_role'];
+                $this->fun  = $_SESSION['u_fun'];
+                $this->team = $_SESSION['u_team'];
             }
         }
     }
@@ -69,15 +69,15 @@ class User
                 //将用户信息存入session, 更新類成員信息
                 $this->loginAddr = $_SESSION['loginAddr'] =  __getIP();
                 $this->isLogined = $_SESSION['isLogined'] = true;          //isLogined
-                $this->uid =    $_SESSION['uid'] = $userInfo['uid'];            //uid
-                $this->name =   $_SESSION['name'] = $userInfo['name'];           //name
-                $this->mail =   $_SESSION['mail'] = $userInfo['mail'];           //mail
+                $this->uid =    $_SESSION['u_uid'] = $userInfo['uid'];            //uid
+                $this->name =   $_SESSION['u_name'] = $userInfo['name'];           //name
+                $this->mail =   $_SESSION['u_mail'] = $userInfo['mail'];           //mail
                 $this->lastLogin = $_SESSION['lastLogin'] = $userInfo['lastLogin'];   //lastLogin
                 $this->loginTimes = $_SESSION['loginTimes'] = $userInfo['loginTimes']; //LoginTimes
                 $this->enable = $_SESSION['enable'] = $userInfo['enable'];         //enable
-                $this->role = $_SESSION['role'] = $this->getRoleByUid($uid);        //roles
-                $this->fun  = $_SESSION['fun'] = $this->getFunByUid($uid);          //funs
-                $this->team = $_SESSION['team'] = $this->getTeamByUid($uid);        //teams
+                $this->role = $_SESSION['u_role'] =  empty($this->getRoleByUid($uid,'name')) ? array() : $this->getRoleByUid($uid,'name');        //roles
+                $this->fun  = $_SESSION['u_fun'] =   empty($this->getFunByUid($uid,'name')) ? array() : $this->getFunByUid($uid,'name');          //funs
+                $this->team = $_SESSION['u_team'] =  empty($this->getTeamByUid($uid)) ? array() : $this->getTeamByUid($uid);        //teams
 
                 //更新登录信息
                 $this->uconn->query("update users set loginAddr='{$this->loginAddr}', lastLogin=now(), LoginTimes=LoginTimes+1 where Uid='{$this->uid}'");
@@ -151,9 +151,10 @@ class User
     /**
      * 增加一個用戶
      * @param $userInfo
+     * @param $team
      * @return bool|mysqli_result
      */
-    public function userAdd($userInfo)
+    public function userAdd($userInfo, $team)
     {
         $userInfo['pwd'] = password_hash($userInfo['pwd'],PASSWORD_DEFAULT);
         $sql = "insert into users (uid, name, pwd, mail) value (
@@ -161,7 +162,12 @@ class User
                 '{$userInfo['name']}',
                 '{$userInfo['pwd']}',
                 '{$userInfo['mail']}')";
-        return $this->uconn->query($sql);
+        if($this->uconn->query($sql))
+        {
+            return $this->uconn->query("insert into utid (uid, tid) values ('{$userInfo['uid']}','{$team}')");
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -383,6 +389,7 @@ class User
     {
         if ($this->uid == "admin") return true;         //管理員跳過檢查
         if (!is_array($this->role)) return false;       //無角色返回false
+
         if (in_array($rName, $this->role)) {
             return true;
         } else {

@@ -204,9 +204,12 @@ function __createLink($id, $name=null, $class=null, $link='#', $desc)
  */
 function __createSelectItem($itemList)
 {
-    foreach ($itemList as $value)
+    if(is_array($itemList))
     {
-        echo "<li class='listOption'>{$value}</li>";
+        foreach ($itemList as $value)
+        {
+            echo "<li class='listOption'>{$value}</li>";
+        }
     }
 }
 

@@ -8,8 +8,10 @@
 
 if(!$user->authByRole('管理員')) goto pageEnd;
 
-if(!empty(__get('btnUserAdd')))   //添加用戶
+//添加用戶
+if(!empty(__get('btnUserAdd')))
 {
+    $teamAdd = __get('team');
     $userInfo = $user->sampleUserInfo;
     $userInfo['uid'] = __get('uid');
     $userInfo['name'] = __get('uname');
@@ -20,7 +22,7 @@ if(!empty(__get('btnUserAdd')))   //添加用戶
     {
         __showMsg('用戶創建失敗, 用戶名和密碼不能為空.');
     } else {
-        if ($user->userAdd($userInfo)) {
+        if ($user->userAdd($userInfo,$teamAdd)) {
             __showMsg('用戶添加成功');
         } else {
             __showMsg("用戶添加失敗" . $user->uconn->getErr());
@@ -134,19 +136,28 @@ if(empty($teamForUid)) $teamForUid = array();
 </script>
 <div id="divUserAdd" class="divSearch">
     <form action="?act=users&amp;subact=useradd" method="post" enctype="multipart/form-data" id="formUserAdd">
+    <table>
+        <tr>
+      <td>賬號名</td>
+      <td><input type="text" name="uid" id="uid" style="width: 100px;" /></td>
+      <td>用戶名</td>
+            <td><input type="text" name="uname" id="uname" style="width: 100px;" /></td>
+            <td>密碼</td>
+            <td><input type="text" name="password" id="password" style="width: 100px;" /></td>
+            <td>郵件</td>
+            <td><input type="text" name="mail" id="mail" style="width: 100px;" /></td>
+            <td>團隊</td>
+            <td>
+                <input type="text" name="team" id="team" style="width: 100px;" class="selInput"/>
+                <ul class="itemList">
+                    <?php __createSelectItem($conn->getLine("select name from teamlist"));  ?>
+                </ul>
 
-      <label for="uid">賬號名</label>
-      <input type="text" name="uid" id="uid" style="width: 100px;" />
-      <label for="uname">用戶名</label>
-      <input type="text" name="uname" id="uname" style="width: 100px;" />
-      <label for="password">密碼</label>
-      <input type="text" name="password" id="password" style="width: 100px;" />
-      <label for="mail">郵件</label>
-      <input type="text" name="mail" id="mail" style="width: 100px;" />
-      <label for="team">團隊</label>
-      <input type="text" name="team" id="team" style="width: 100px;" class=""/>
-      <input type="submit" name="btnUserAdd" id="btnUserAdd" value="創建用戶" />
+            </td>
+            <td><input type="submit" name="btnUserAdd" id="btnUserAdd" value="創建用戶" /></td>
+        </tr>
     </form>
+    </table>
 </div>
 
 <div id="divUserManagement" >
