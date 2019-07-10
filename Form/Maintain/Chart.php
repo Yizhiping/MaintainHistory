@@ -10,8 +10,53 @@ $lineList = $conn->getLine("select line from linelist order by line");
 $stationList = $conn->getLine("select name from stationlist order by name");
 $errCodeList = $conn->getLine("select code from errorcode order by code");
 $modelList = $conn->getLine("select name from modellist order by name");
-?>
+//对进行过按数量进行排序
+array_multisort(array_column($allCount,'count'), SORT_ASC, $allCount);
 
+?>
+<script type="text/javascript" src="Script/excanvas.js"></script>
+<script type="text/javascript" src="Script/loongchart.core.min.js"></script>
+<script type="text/javascript" src="Script/loongchart.pie.min.js"></script>
+<script type="text/javascript" src="Script/loongchart.bar.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var data = [
+            <?php
+                $tmpArr = array();
+            foreach ($allCount as $item)
+            {
+                array_push($tmpArr,'{ text: "' . $item['name'] .'", value:' . $item['count'] .'}');
+            }
+            echo implode(',' . chr(13),$tmpArr);
+
+            ?>
+        ];
+        var options = {
+            title: { content: '前十大不良' }
+            //subTitle: { content: 'Let see which brower shares the most.' }
+        };
+        (new LChart.Bar('myChart', 'CN')).SetSkin('BlackAndWhite').Draw(data, options);
+        (new LChart.Pie('myChart1', 'CN')).SetSkin('BlackAndWhite').Draw(data, options);
+    });
+    //$(document).ready(
+    //    var data = [
+    //        <?php
+    //        $tmpArr = array();
+    //        foreach ($allCount as $item)
+    //        {
+    //            array_push($tmpArr,'{ text: "' . $item['name'] .'", value:' . $item['count'] .'}');
+    //        }
+    //        echo implode(',' . chr(13),$tmpArr);
+    //
+    //        ?>
+    //    ];
+    //    var options = {
+    //        title: { content: '前十大不良' }
+    //        //subTitle: { content: 'Let see which brower shares the most.' }
+    //    };
+    //    (new LChart.Bar('myChart', 'CN')).SetSkin('BlackAndWhite').Draw(data, options);
+    //);
+</script>
 <style>
     table{ table-layout:fixed;}
     table td{ word-break:break-word;}
@@ -61,7 +106,13 @@ $modelList = $conn->getLine("select name from modellist order by name");
         color: #000;
         text-decoration: none;
     }
+    #showChart {
+        display: inline-table;
+    }
 
+    #showChart div {
+        float: left;
+    }
 </style>
 <div>
     <div>
@@ -122,39 +173,8 @@ $modelList = $conn->getLine("select name from modellist order by name");
             </table>
         </form>
     </div>
-    <div style="margin-top: 5px;">
-        <?php
-        if(empty($allCount))
-        {
-            echo "沒有可以顯示的內容, 請更換搜索條件重試.";
-
-        } else {
-            $firstRow = true;
-            echo "<table id='tabCount'>";
-            foreach ($allCount as $lineName => $count) {
-                if ($firstRow)       //第一行, 打印標題
-                {
-                    $firstRow = false;
-                    echo "<tr class='tabTile'><td></td>";
-                    foreach ($count as $stationName => $item) {
-                        echo "<td>{$stationName}</td>";
-                    }
-                    echo "</tr>";
-                }
-                echo "<tr>";
-                $firstCol = true;
-                foreach ($count as $stationName => $item) {
-                    if ($firstCol) {
-                        $firstCol = false;
-                        echo "<td class='lineName'>{$lineName}</td>";
-                    }
-                    $aHtmlCode = $item =='0' ? '0' : "<a target='viewChart' href='?act=maintain/showChart/{$startDate}/{$stopDate}/{$lineName}/{$stationName}'>{$item}</a>";
-                    echo "<td>{$aHtmlCode}</td>";
-                }
-                echo "</tr>";
-            }
-            echo "</table>";
-        }
-        ?>
+    <div style="margin-top: 5px; display: inline-block;" id="showChart">
+        <div id="myChart" style="width: 500px; height: 300px;"></div>
+        <div id="myChart1" style="width: 500px; height: 300px;"></div>
     </div>
 </div>

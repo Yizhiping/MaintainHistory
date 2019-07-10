@@ -205,14 +205,23 @@ switch ($method)
             //統計前9大的數據
             $sql = "select {$filterBy} as name,count({$filterBy}) as count from maintainhistory  where date between '{$startDate}' and '{$stopDate}' {$sqlSub} group by {$filterBy} order by count({$filterBy}) desc";
             $result = $conn->getAllRow($sql);
+            if(!empty($result)) {
+                //取前9大的數據
+                $top9 = array_slice($result, 0, 9);
+                //前9大的名字
+                $top9Name = array_column($top9, 'name');
 
-            //取前9大的數據
-            $top9 = array_slice($result,0,9);
-            //前9大的名字
-            $top9Name = array_column($top9,'name');
+                $other = $conn->getItemByItemName("select count(id) as count from maintainhistory where date between '{$startDate}' and '{$stopDate}' {$sqlSub} and {$filterBy} not in ('" . implode("','", $top9Name) . "')");
+                if($other != '0') {
+                    $allCount = $top9 + array(9=>array('name' => 'other', 'count' => $other));
+                } else {
+                    $allCount = $top9;
+                }
+            } else {
+                $allCount = array(array());
+            }
 
-            $other = $conn->getItemByItemName("select count(id) as count from maintainhistory where date between '{$startDate}' and '{$stopDate}' {$sqlSub} and {$filterBy} not in ('" .implode("','",$top9Name) ."')");
-            $allCount = $top9 + array('name'=>'other', 'count'=>$other);
+
             //todo: 計算不在9大不良, 將兩個合併
 
         } else {
