@@ -72,9 +72,7 @@
 </script>
 <div id="divMaintainAdd" style="margin-top: 5px;">
     <form method="post" action="?act=maintain/update/<?php echo $id ?>" id="formMaintainUpdate">
-        <div style="background-color: #00C1B3"><input type="submit" value="更新記錄" name="btnMaintainUpdate" id="btnMaintainUpdate"></div>
-        <?php
-        include("Form/Maintain/Form.php");
-        ?>
+        <?php  include("Form/Maintain/Form.php");    ?>
+        <div style="width: 1070px; margin-top: 5px;"><input style="float: right;" type="submit" value="更新記錄" name="btnMaintainUpdate" id="btnMaintainUpdate"></div>
     </form>
 </div>

@@ -21,6 +21,12 @@
                 alert("機種不能為空.");
                 return false;
             }
+            if($('#team').val() == "")
+            {
+                $('#model').focus();
+                alert("團隊不能為空.");
+                return false;
+            }
             if($('#station').val() == "")
             {
                 $('#station').focus();
@@ -84,6 +90,6 @@
 <?php
 include("Form/Maintain/Form.php");
 ?>
-        <div style="float: right"><input type="reset" value="清空重填" class="button"><input type="submit" value="添加記錄" name="btnMaintainAdd" id="btnMaintainAdd"></div>
+        <div style="width: 1070px; margin-top: 5px;"><input type="reset" value="清空重填" class="button" style="float: right;"><input style="float: right;" type="submit" value="添加記錄" name="btnMaintainAdd" id="btnMaintainAdd"></div>
     </form>
 </div>

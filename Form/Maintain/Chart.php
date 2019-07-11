@@ -5,13 +5,16 @@
  * Date: 2019/7/5
  * Time: 17:22
  */
+//todo 需過濾用戶所能獲得的列表???
 //***********************************獲取各個下拉列表的清單****************************
 $lineList = $conn->getLine("select line from linelist order by line");
 $stationList = $conn->getLine("select name from stationlist order by name");
 $errCodeList = $conn->getLine("select code from errorcode order by code");
 $modelList = $conn->getLine("select name from modellist order by name");
+$teamList  = $conn->getLine("select name from teamlist order by name");
 //对进行过按数量进行排序
-array_multisort(array_column($allCount,'count'), SORT_ASC, $allCount);
+
+if($allCount != false) array_multisort(array_column($allCount,'count'), SORT_ASC, $allCount);
 
 ?>
 <script type="text/javascript" src="Script/excanvas.js"></script>
@@ -19,43 +22,48 @@ array_multisort(array_column($allCount,'count'), SORT_ASC, $allCount);
 <script type="text/javascript" src="Script/loongchart.pie.min.js"></script>
 <script type="text/javascript" src="Script/loongchart.bar.min.js"></script>
 <script type="text/javascript">
+
+    // {
+    //     text: "Chrome",
+    //         value: 12.8,
+    //     click: function(a,b){alert("Hi! This is Chrome explorer data!")}
+    // }
     $(document).ready(function () {
         var data = [
             <?php
-                $tmpArr = array();
-            foreach ($allCount as $item)
-            {
-                array_push($tmpArr,'{ text: "' . $item['name'] .'", value:' . $item['count'] .'}');
-            }
-            echo implode(',' . chr(13),$tmpArr);
+                if($allCount != false) {
+                    $tmpArr = array();
+                    foreach ($allCount as $item) {
 
+
+                        if($item['name'] != 'other')
+                        {
+                            $base64Str = base64_encode("{$startDate}|{$stopDate}|{$team}|{$line}|{$station}|{$model}|{$filterBy}='{$item['name']}'");
+                        } else {
+                            $base64Str = base64_encode("{$startDate}|{$stopDate}|{$team}|{$line}|{$station}|{$model}|{$filterBy} not in('" .  implode("','", $top9Name) . "')");
+                        }
+                        $base64Str = str_replace('=','*', $base64Str);
+                        $openUrl = "{$homePage}?act=maintain/showList/{$base64Str}" ;
+                        array_push($tmpArr,
+                            '{
+                                        text: "' . $item['name'] . '", 
+                                        value:' . $item['count'] . ',
+                                        click:function(a,b) {
+                                            window.open("' . $openUrl .  '");
+                                        }
+                                        }');
+                    }
+                    echo implode(',' . chr(13), $tmpArr);
+                }
             ?>
         ];
         var options = {
-            title: { content: '前十大不良' }
+            // title: { content: '前十大不良' }
             //subTitle: { content: 'Let see which brower shares the most.' }
         };
         (new LChart.Bar('myChart', 'CN')).SetSkin('BlackAndWhite').Draw(data, options);
         (new LChart.Pie('myChart1', 'CN')).SetSkin('BlackAndWhite').Draw(data, options);
     });
-    //$(document).ready(
-    //    var data = [
-    //        <?php
-    //        $tmpArr = array();
-    //        foreach ($allCount as $item)
-    //        {
-    //            array_push($tmpArr,'{ text: "' . $item['name'] .'", value:' . $item['count'] .'}');
-    //        }
-    //        echo implode(',' . chr(13),$tmpArr);
-    //
-    //        ?>
-    //    ];
-    //    var options = {
-    //        title: { content: '前十大不良' }
-    //        //subTitle: { content: 'Let see which brower shares the most.' }
-    //    };
-    //    (new LChart.Bar('myChart', 'CN')).SetSkin('BlackAndWhite').Draw(data, options);
-    //);
 </script>
 <style>
     table{ table-layout:fixed;}
@@ -113,6 +121,10 @@ array_multisort(array_column($allCount,'count'), SORT_ASC, $allCount);
     #showChart div {
         float: left;
     }
+
+    #itemList {
+        z-index: 99;
+    }
 </style>
 <div>
     <div>
@@ -125,7 +137,15 @@ array_multisort(array_column($allCount,'count'), SORT_ASC, $allCount);
                     <td><input type="submit" value="查找" id="btnMaintainSearch" name="btnMaintainSearch" class="button"></td>
                 </tr>
                 <tr>
-                    <td>線別</td>
+                    <td>團隊:</td>
+                    <td>
+                        <input class="selInput" id="team" name="team" value="<?php echo $line==null ? 'All' : $team ?>">
+                        <ul class="itemList">
+                            <li class='listOption'>All</li>
+                            <?php __createSelectItem($teamList) ?>
+                        </ul>
+                    </td>
+                    <td>線別:</td>
                     <td>
                         <input class="selInput" id="line" name="line" value="<?php echo $line==null ? 'All' : $line ?>">
                         <ul class="itemList">
@@ -133,7 +153,7 @@ array_multisort(array_column($allCount,'count'), SORT_ASC, $allCount);
                             <?php __createSelectItem($lineList) ?>
                         </ul>
                     </td>
-                    <td>站別</td>
+                    <td>站別:</td>
                     <td>
                         <input class="selInput" id="station" name="station" value="<?php echo $station==null ? 'All' : $station ?>">
                         <ul class="itemList">
@@ -141,7 +161,7 @@ array_multisort(array_column($allCount,'count'), SORT_ASC, $allCount);
                             <?php __createSelectItem($stationList) ?>
                         </ul>
                     </td>
-                    <td>錯誤代碼</td>
+                    <td>錯誤代碼:</td>
                     <td>
                         <input class="selInput" id="errCode" name="errCode" value="<?php echo $errCode==null ? 'All' : $errCode ?>">
                         <ul class="itemList">
@@ -159,13 +179,16 @@ array_multisort(array_column($allCount,'count'), SORT_ASC, $allCount);
                     </td>
                 </tr>
                 <tr>
-                    <td>统计依据</td>
+                    <td>排名欄位:</td>
                     <td>
                         <select name="filterBy">
-                            <option value="errCode">錯誤代碼</option>
-                            <option value="line">線體</option>
-                            <option value="model">機種</option>
-                            <option value="team">團隊</option>
+                            <?php
+                                foreach (array('異常類型'=>'errClass','異常描述'=>'errDesc','錯誤代碼'=>'errCode',) as $key => $val)
+                                {
+                                    $isSelected = ($filterBy == $val) ? "selected = 'selected'" : null ;
+                                    echo "<option value='{$val}' {$isSelected}>{$key}</option>";
+                                }
+                            ?>
                         </select>
                     </td>
                     <td colspan="5"></td>
@@ -174,7 +197,7 @@ array_multisort(array_column($allCount,'count'), SORT_ASC, $allCount);
         </form>
     </div>
     <div style="margin-top: 5px; display: inline-block;" id="showChart">
-        <div id="myChart" style="width: 500px; height: 300px;"></div>
-        <div id="myChart1" style="width: 500px; height: 300px;"></div>
+        <div id="myChart" style="width: 600px; height: 300px;"></div>
+        <div id="myChart1" style="width: 600px; height: 300px;"></div>
     </div>
 </div>

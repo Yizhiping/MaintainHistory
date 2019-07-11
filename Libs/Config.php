@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Created by PhpStorm.
  * User: Ping_yi
@@ -25,6 +25,8 @@ $db_name = "MaintainHistory";
 
 /**********************一些参数**************************/
 $homeUrl = "Index.php";     //默认页面
+//$homePage = "http://" . $_SERVER['SERVER_ADDR'] . "/maintainhistory/index.php";
+$homePage = "http://172.22.255.125/maintainhistory/index.php";
 //$opid = 'S09264888';        //系統調用SFIS用到的工號
 //$device = '111111';         //系統調用SFIS用到的撥號
 

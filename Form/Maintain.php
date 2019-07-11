@@ -175,7 +175,7 @@ switch ($method)
             $sqlSub = implode(' and ', $tmpArr);
             $sqlSub = empty($sqlSub) ? null : " and " . $sqlSub ;
 
-            $searchResult = $conn->getAllRow("select id,date,team,line,station,errCode,errClass,errDesc,rootCause,state from maintainhistory where date between '{$startDate}' and '{$stopDate}' {$sqlSub}");
+            $searchResult = $conn->getAllRow("select id,date,team,line,station,errCode,errClass,errDesc,causeAnalysis,state from maintainhistory where date between '{$startDate}' and '{$stopDate}' {$sqlSub}");
 
         } else {
             __showMsg("搜索的日期錯誤, 開始日期必須小雨結束日期, 且最多搜索的天數不大於90天.");
@@ -193,7 +193,7 @@ switch ($method)
             $allCount  = array();
 
             //獲取篩選條件
-            foreach (array('line','station','errCode','model') as $key)
+            foreach (array('team','line','station','errCode','model') as $key)
             {
                 if($$key != 'All') array_push($tmpArr,"{$key}='{$$key}'");
             }
@@ -210,6 +210,7 @@ switch ($method)
                 $top9 = array_slice($result, 0, 9);
                 //前9大的名字
                 $top9Name = array_column($top9, 'name');
+                $_SESSION['top9Name'] = $top9Name;
 
                 $other = $conn->getItemByItemName("select count(id) as count from maintainhistory where date between '{$startDate}' and '{$stopDate}' {$sqlSub} and {$filterBy} not in ('" . implode("','", $top9Name) . "')");
                 if($other != '0') {
@@ -218,7 +219,7 @@ switch ($method)
                     $allCount = $top9;
                 }
             } else {
-                $allCount = array(array());
+                $allCount = false;
             }
 
 
@@ -228,7 +229,32 @@ switch ($method)
             __showMsg("搜索的日期錯誤, 開始日期必須小雨結束日期, 且最多搜索的天數不大於90天.");
         }
         break;          //图表
+    case 'showList':            //顯示特定內容
+        $dat = str_replace('*','=',$dat);
+        $dat = str_replace(' ','+',$dat);
 
+        $tmpArr = explode('|',base64_decode($dat));
+        $startDate = $tmpArr[0];
+        $stopDate  = $tmpArr[1];
+        $team      = $tmpArr[2];
+        $line      = $tmpArr[3];
+        $station   = $tmpArr[4];
+        $model     = $tmpArr[5];
+        $subFil    = $tmpArr[6];
+
+        //獲取篩選條件
+        $tmpArr = array();
+        foreach (array('team','line','station','model') as $key)
+        {
+            if(strtoupper($$key) != 'ALL' && !empty($$key)) array_push($tmpArr,"{$key}='{$$key}'");
+        }
+
+        //處理篩選條件
+        $sqlSub = implode(' and ', $tmpArr);
+        $sqlSub = empty($sqlSub) ? null : " and " . $sqlSub ;
+
+        $result = $conn->getAllRow("select id,model,station,errCode,errDesc,causeAnalysis,zAction from maintainhistory where date between '{$startDate}' and '{$stopDate}' {$sqlSub}   and {$subFil} order by date");
+        break;
     case 'search':          //查找
         /*http://127.0.0.1/maintainhistory/Index.php?act=maintain/showChart/2019-07-03/2019-07-10/3H/Beamforming */
         $startDate = __get('startDate');

@@ -60,6 +60,12 @@ $teamList = $user->team;
         </td>
         <td class="maintainTitle">團隊:</td>
         <td>
+            <?php
+            //如果團隊的名字為空, 則賦值為用戶團隊的第一個
+            if(empty($team)) {
+                if (!empty($user->team)) $team = $user->team[0];
+            }
+            ?>
             <input type="text" id="team" name="team" value="<?php echo $team ?>" class="selInput">
             <ul id="selTeam" name="selTeam" class="itemList">
                 <?php __createSelectItem($teamList) ?>
@@ -69,21 +75,21 @@ $teamList = $user->team;
     </tr>
     <tr>
         <td class="maintainTitle">線體:</td>
-        <td title="發生異常時的所在綫體"><input type="text" id="line" name="line" value="<?php echo $line ?>" class="selInput">
+        <td title="發生異常時的所在綫體"><input type="text" id="line" name="line" value="<?php echo $line ?>" class="selInput" readonly="readonly">
             <ul id="selLine" name="selLine" class="itemList">
                 <?php __createSelectItem($lineList) ?>
             </ul>
         </td>
          <td class="maintainTitle">機種:</td>
         <td title="發生異常的機種">
-            <input type="text" id="model" name="model" value="<?php echo $model ?>" class="selInput">
+            <input type="text" id="model" name="model" value="<?php echo $model ?>" class="selInput" readonly="readonly">
             <ul id="selModel" name="selModel" class="itemList">
                 <?php __createSelectItem($modelList) ?>
             </ul>
         </td>
         <td class="maintainTitle">站位:</td>
         <td title="發生異常的站位">
-            <input type="text" id="station" name="station" value="<?php echo $station ?>" class="selInput">
+            <input type="text" id="station" name="station" value="<?php echo $station ?>" class="selInput" readonly="readonly">
             <ul id="selStation" name="selStation" class="itemList">
                 <?php __createSelectItem($stationList)   ?>
             </ul>
@@ -93,13 +99,6 @@ $teamList = $user->team;
         <td></td>
     </tr>
     <tr>
-        <td class="maintainTitle">不良代碼:</td>
-        <td title="發生異常時測試程式顯示的不良代碼, 如沒有則留空.">
-            <input type="text" id="errCode" name="errCode" value="<?php echo $errCode ?>" class="selInput">
-            <ul id="selErrCode" name="selErrCode" class="itemList">
-                <?php __createSelectItem($conn->getLine("select code from errorcode order by code"))   ?>
-            </ul>
-        </td>
         <td class="maintainTitle">異常類別:</td>
         <td>
             <input type="text" id="errClass" name="errClass" value="<?php echo $errClass ?>" class="selInput">
@@ -107,13 +106,20 @@ $teamList = $user->team;
                 <?php __createSelectItem($conn->getLine("select name from errorClass order by name"))   ?>
             </ul>
         </td>
+        <td class="maintainTitle">不良代碼:</td>
+        <td title="發生異常時測試程式顯示的不良代碼, 如沒有則留空.">
+            <input type="text" id="errCode" name="errCode" value="<?php echo $errCode ?>" class="selInput">
+            <ul id="selErrCode" name="selErrCode" class="itemList">
+                <?php __createSelectItem($conn->getLine("select code from errorcode order by code"))   ?>
+            </ul>
+        </td>
         <td class="maintainTitle">現象描述:</td>
         <td colspan="3" title="簡單描述異常的現象, 如產品不上電,測試程式無反應,XX項測試不良."><input type="text" name="errDesc" id="errDesc" value="<?php echo $errDesc ?>" style="width: 100%;"></td>
     </tr>
-    <tr>
-        <td class="maintainTitle">異常原因:</td>
-        <td colspan="8"><textarea name="rootCause" id="rootCause" ><?php echo $rootCause ?></textarea></td>
-    </tr>
+<!--    <tr>-->
+<!--        <td class="maintainTitle">異常原因:</td>-->
+<!--        <td colspan="8"><textarea name="rootCause" id="rootCause" >--><?php //echo $rootCause ?><!--</textarea></td>-->
+<!--    </tr>-->
     <td></td>
     <td class="notice" colspan="8">描述導致異常的原因, 如電源線接觸不良, 網絡無連接, Cable線舊損.</td>
     <tr>

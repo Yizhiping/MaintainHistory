@@ -243,3 +243,18 @@ function diffBetweenTwoDays ($day1, $day2)
         return ($second2 - $second1) / 86400;
     }
 }
+
+function printTab($tab)
+{
+    echo "<table>";
+    foreach ($tab as $item)
+    {
+        echo "<tr>";
+            foreach ($item as $val)
+            {
+                echo "<td style='border: 1px solid'>{$val}</td>";
+            }
+        echo "</tr>";
+    }
+    echo "</table>";
+}

@@ -128,7 +128,7 @@ $modelList = $conn->getLine("select name from modellist order by name");
                 {
                     $firstRow = false;
                     echo "<tr class='tabTile'>";
-                    foreach (array('序號','日期','團隊','線體','站位','代碼','類別','描述','原因','狀態','View') as $item) {
+                    foreach (array('序號','日期','團隊','線體','站位','代碼','類別','描述','原因分析','狀態','View') as $item) {
                         echo "<td>{$item}</td>";
                     }
                     echo "</tr>";
@@ -141,8 +141,8 @@ $modelList = $conn->getLine("select name from modellist order by name");
                 echo "<td>{$val['station']}</td>";
                 echo "<td>{$val['errCode']}</td>";
                 echo "<td>{$val['errClass']}</td>";
-                echo "<td>{$val['errDesc']}</td>";
-                echo "<td>{$val['rootCause']}</td>";
+                echo "<td style='text-align: left'>" . subStr_cut($val['errDesc'],0,10) . "</td>";
+                echo "<td style='text-align: left'>" . subStr_cut($val['causeAnalysis'],0,10) . "</td>";
                 printf("<td>%s</td>", $val['state'] == 1 ? '已結案' : '未結案');
                 printf("<td><a href='?act=maintain/view/%d' target='maintainHistory_view'>查看</a></td>", $val['id']);
                 echo "</tr>";
